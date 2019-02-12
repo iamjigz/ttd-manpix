@@ -40,23 +40,24 @@
           <div class="canvas-background"></div>
         </div>
       </div>
-
-      <div class="column right-column">
+      <div class="column right-column" style="display: none">
         @@include('templates/transformations.html', {})
         @@include('templates/palettes-list.html', {})
         <div class="pull-bottom cursor-coordinates"></div>
       </div>
     </div>
 
+    <!--
     <div id="application-action-section" data-pskl-controller="settings" class="sticky-section right-sticky-section">
       <div class="sticky-section-wrap">
-        @@include('templates/settings.html', {})
+        @include('templates/settings.html', {})
         <div class="drawer vertical-centerer">
           <div class="drawer-content" id="drawer-container">
           </div>
         </div>
       </div>
     </div>
+    -->
   </div>
 
   <div id="dialog-container-wrapper">

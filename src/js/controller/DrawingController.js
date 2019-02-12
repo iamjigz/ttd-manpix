@@ -446,11 +446,11 @@
 
   ns.DrawingController.prototype.getAvailableWidth_ = function () {
     var leftSectionWidth = $('.left-column').outerWidth(true);
-    var rightSectionWidth = $('.right-column').outerWidth(true);
+    //var rightSectionWidth = $('.right-column').outerWidth(true);
     var toolsContainerWidth = $('#tool-section').outerWidth(true);
     var settingsContainerWidth = $('#application-action-section').outerWidth(true);
 
-    var usedWidth = leftSectionWidth + rightSectionWidth + toolsContainerWidth + settingsContainerWidth;
+    var usedWidth = leftSectionWidth /*+ rightSectionWidth*/ + toolsContainerWidth /*+ settingsContainerWidth*/;
     var availableWidth = $('#main-wrapper').width() - usedWidth;
 
     var comfortMargin = 10;

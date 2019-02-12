@@ -82,10 +82,10 @@
       //  $('.minimap-container'));
       //this.minimapController.init();
 
-      this.framesListController = new pskl.controller.FramesListController(
-        this.piskelController,
-        $('#preview-list-wrapper').get(0));
-      this.framesListController.init();
+      //this.framesListController = new pskl.controller.FramesListController(
+      //  this.piskelController,
+      //  $('#preview-list-wrapper').get(0));
+      //this.framesListController.init();
 
       //this.layersListController = new pskl.controller.LayersListController(this.piskelController);
       //this.layersListController.init();
@@ -241,7 +241,7 @@
     render : function (delta) {
       this.drawingController.render(delta);
       //this.previewController.render(delta);
-      this.framesListController.render(delta);
+      //this.framesListController.render(delta);
     },
 
     getFirstFrameAsPng : function () {
