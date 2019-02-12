@@ -1,6 +1,7 @@
 .cheatsheet-link {
-  position: fixed;
-  bottom: 10px;
+  display: inline-block;
+  position: relative;
+  top: 12px;
   left: 10px;
 
   color : var(--highlight-color);

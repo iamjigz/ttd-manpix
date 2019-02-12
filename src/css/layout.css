@@ -16,7 +16,7 @@
   display: flex;
 
   position: absolute;
-  left: 100px; /* Reserve room for tools on the left edge of the screen. */
+  left: 195px; /* Reserve room for tools on the left edge of the screen. */
   top: 0;
   right: 50px; /* Reserve room for actions on the right edge of the screen. */
   bottom: 0;
@@ -73,7 +73,7 @@
 
 .left-sticky-section.sticky-section {
   left: 0;
-  max-width: 100px;
+  max-width: 195px;
 }
 
 .left-sticky-section .tool-icon {

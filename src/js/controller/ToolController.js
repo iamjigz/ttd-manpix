@@ -16,9 +16,12 @@
       new pskl.tools.drawing.selection.ShapeSelect(),
       new pskl.tools.drawing.selection.RectangleSelect(),
       new pskl.tools.drawing.selection.LassoSelect(),
-      new pskl.tools.drawing.Lighten(),
+      //new pskl.tools.drawing.Lighten(),
       new pskl.tools.drawing.DitheringTool(),
-      new pskl.tools.drawing.ColorPicker()
+      new pskl.tools.drawing.ColorPicker(),
+      new pskl.tools.transform.Flip(),
+      new pskl.tools.transform.Rotate(),
+      new pskl.tools.transform.Center(),
     ];
 
     this.toolIconBuilder = new pskl.tools.ToolIconBuilder();
@@ -122,7 +125,9 @@
   ns.ToolController.prototype.addKeyboardShortcuts_ = function () {
     for (var i = 0 ; i < this.tools.length ; i++) {
       var tool = this.tools[i];
-      pskl.app.shortcutService.registerShortcut(tool.shortcut, this.onKeyboardShortcut_.bind(this, tool.toolId));
+      if (tool.shortcut) {
+          pskl.app.shortcutService.registerShortcut(tool.shortcut, this.onKeyboardShortcut_.bind(this, tool.toolId));
+      }
     }
   };
 })();

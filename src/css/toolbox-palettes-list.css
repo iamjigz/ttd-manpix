@@ -1,5 +1,4 @@
 .palettes-list-container {
-  min-height: 100px;
   display: flex;
   flex-direction: column;
 }

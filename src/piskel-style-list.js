@@ -26,6 +26,7 @@
   "css/dialogs-performance-info.css",
   "css/dialogs-unsupported-browser.css",
   "css/notifications.css",
+  "css/tool-section.css",
   "css/toolbox.css",
   "css/toolbox-layers-list.css",
   "css/toolbox-palettes-list.css",
