@@ -1,6 +1,42 @@
 (function () {
   var ns = $.namespace('pskl.service.palette');
 
+  var dec2Hex = function(n) {
+    var hex = (n || 0).toString(16).substr(-4).toUpperCase();
+    return pskl.utils.StringUtils.leftPad(hex, 2, '0');
+  };
+
+  var rgbToHex = function(rgb) {
+    return "#" + rgb.map(dec2Hex).join("");
+  };
+
+  var fixedPalette = {
+      "id": "fixed-pallete",
+      "name": "Fixed Palette",
+      "colors": [
+          [0,   0,   0],
+          [255, 255, 255],
+          [161, 173, 171],
+          [66,  69,  76],
+          [241, 106,  40],
+          [255, 238,  74],
+          [35,  72,  28],
+          [61, 157,  49],
+          [31, 163, 211],
+          [20,  32, 150],
+          [81,  27, 123],
+          [190,  25, 101],
+          [235, 160, 191],
+          [249,  33,  52],
+          [253, 201, 141],
+          [101,  56,   0],
+      ].map(rgbToHex)
+  };
+
+  var palettes = [fixedPalette].map(function (palette) {
+    return pskl.model.Palette.fromObject(palette);
+  });
+
   ns.PaletteService = function () {
     this.dynamicPalettes = [];
     // Exposed for tests.
@@ -8,18 +44,11 @@
   };
 
   ns.PaletteService.prototype.getPalettes = function () {
-    var palettesString = this.localStorageGlobal.getItem('piskel.palettes');
-    var palettes = JSON.parse(palettesString) || [];
-    palettes = palettes.map(function (palette) {
-      return pskl.model.Palette.fromObject(palette);
-    });
-
-    return this.dynamicPalettes.concat(palettes);
+      return palettes;
   };
 
   ns.PaletteService.prototype.getPaletteById = function (paletteId) {
-    var palettes = this.getPalettes();
-    return this.findPaletteInArray_(paletteId, palettes);
+    return palettes[0];
   };
 
   ns.PaletteService.prototype.savePalette = function (palette) {
