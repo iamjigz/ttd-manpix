@@ -2,8 +2,8 @@
 /** Righty sticky drawer expanded state. */
 
 .right-sticky-section.sticky-section {
-  right: 0;
-  width: 47px;
+  left: -280px;
+  width: 0px;
 
   -webkit-transition: all 200ms ease-out;
   -moz-transition: all 200ms ease-out;
@@ -13,7 +13,7 @@
 }
 
 .right-sticky-section.expanded {
-  right: 280px;
+  left: 200px;
 }
 
 .right-sticky-section .tool-icon {

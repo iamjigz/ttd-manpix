@@ -35,6 +35,7 @@
     this.piskelController = piskelController;
     this.closeDrawerShortcut = pskl.service.keyboard.Shortcuts.MISC.CLOSE_POPUP;
     this.settingsContainer = document.querySelector('[data-pskl-controller=settings]');
+    this.settingsContentContainer = document.querySelector('[data-pskl-controller=settings-content]');
     this.drawerContainer = document.getElementById('drawer-container');
     this.isExpanded = false;
     this.currentSetting = null;
@@ -95,14 +96,14 @@
     if (selectedSettingButton) {
       selectedSettingButton.classList.add(SEL_SETTING_CLS);
     }
-    this.settingsContainer.classList.add(EXP_DRAWER_CLS);
+    this.settingsContentContainer.classList.add(EXP_DRAWER_CLS);
 
     this.isExpanded = true;
   };
 
   ns.SettingsController.prototype.closeDrawer_ = function () {
     pskl.utils.Dom.removeClass(SEL_SETTING_CLS);
-    this.settingsContainer.classList.remove(EXP_DRAWER_CLS);
+    this.settingsContentContainer.classList.remove(EXP_DRAWER_CLS);
 
     this.isExpanded = false;
     this.currentSetting = null;
