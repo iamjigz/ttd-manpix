@@ -70,25 +70,25 @@
         $('#drawing-canvas-container'));
       this.drawingController.init();
 
-      this.previewController = new pskl.controller.preview.PreviewController(
-        this.piskelController,
-        $('#animated-preview-canvas-container'));
-      this.previewController.init();
+      //this.previewController = new pskl.controller.preview.PreviewController(
+      //  this.piskelController,
+      //  $('#animated-preview-canvas-container'));
+      //this.previewController.init();
 
-      this.minimapController = new pskl.controller.MinimapController(
-        this.piskelController,
-        this.previewController,
-        this.drawingController,
-        $('.minimap-container'));
-      this.minimapController.init();
+      //this.minimapController = new pskl.controller.MinimapController(
+      //  this.piskelController,
+      //  this.previewController,
+      //  this.drawingController,
+      //  $('.minimap-container'));
+      //this.minimapController.init();
 
       this.framesListController = new pskl.controller.FramesListController(
         this.piskelController,
         $('#preview-list-wrapper').get(0));
       this.framesListController.init();
 
-      this.layersListController = new pskl.controller.LayersListController(this.piskelController);
-      this.layersListController.init();
+      //this.layersListController = new pskl.controller.LayersListController(this.piskelController);
+      //this.layersListController.init();
 
       this.settingsController = new pskl.controller.settings.SettingsController(this.piskelController);
       this.settingsController.init();
@@ -240,7 +240,7 @@
 
     render : function (delta) {
       this.drawingController.render(delta);
-      this.previewController.render(delta);
+      //this.previewController.render(delta);
       this.framesListController.render(delta);
     },
 
