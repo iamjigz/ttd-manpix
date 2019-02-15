@@ -11,6 +11,18 @@ It is the editor used in **[piskelapp.com](http://piskelapp.com)**.
   title="Piskel editor screenshot"
   width="500">
 
+## Quickstart
+
+### Setup
+1. Clone this repository
+2. run: npm install
+3. run: grunt play
+
+### Before Commiting changes
+1. run: npm run format
+2. run: grunt test
+
+
 ## About Piskel
 
 ### Built with
