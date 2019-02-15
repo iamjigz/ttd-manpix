@@ -7,13 +7,13 @@
   };
 
   var rgbToHex = function(rgb) {
-    return "#" + rgb.map(dec2Hex).join("");
+    return '#' + rgb.map(dec2Hex).join('');
   };
 
   var fixedPalette = {
-      "id": "fixed-pallete",
-      "name": "Fixed Palette",
-      "colors": [
+    'id': 'fixed-pallete',
+    'name': 'Fixed Palette',
+    'colors': [
           [0,   0,   0],
           [255, 255, 255],
           [161, 173, 171],
@@ -30,7 +30,7 @@
           [249,  33,  52],
           [253, 201, 141],
           [101,  56,   0],
-      ].map(rgbToHex)
+    ].map(rgbToHex)
   };
 
   var palettes = [fixedPalette].map(function (palette) {
@@ -44,7 +44,7 @@
   };
 
   ns.PaletteService.prototype.getPalettes = function () {
-      return palettes;
+    return palettes;
   };
 
   ns.PaletteService.prototype.getPaletteById = function (paletteId) {

@@ -25,7 +25,8 @@
     "start": "nodewebkit",
     "preversion": "grunt test build",
     "postversion": "git push && git push --tags && npm publish",
-    "release": "grunt && node ./bin/copy-to-piskel-website"
+    "release": "grunt && node ./bin/copy-to-piskel-website",
+    "format": "eslint --fix src/js; prettier --write src/templates/*"
   },
   "devDependencies": {
     "dateformat": "2.0.0",
@@ -54,6 +55,7 @@
     "load-grunt-tasks": "3.5.0",
     "phantomjs": "2.1.7",
     "phantomjs-polyfill-object-assign": "0.0.2",
+    "prettier": "^1.16.4",
     "promise-polyfill": "6.0.2",
     "rmdir": "1.2.0"
   },
