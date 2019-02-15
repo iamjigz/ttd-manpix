@@ -22,6 +22,7 @@
       showPalette: true,
       showButtons: false,
       showInput: true,
+      disabled: true,
       palette: [
         ['rgba(0,0,0,0)']
       ],

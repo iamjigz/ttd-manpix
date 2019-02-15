@@ -81,16 +81,14 @@
 }
 
 .cursor-coordinates {
+  display: inline-block;
   color: var(--highlight-color);
   font-size: 12px;
   font-weight: bold;
   font-family: monospace;
-}
-
-.cursor-coordinates .drawing-zoom {
-  position: absolute;
-  top: -20px;
-  left: 1px;
+  margin-top: 20px;
+  margin-left: 30px;
+  height: 70px;
 }
 
 /**
@@ -165,3 +163,8 @@
 .canvas.canvas-overlay       {z-index:  9;}
 .canvas.onion-skin-canvas    {z-index:  10;}
 .canvas.layers-above-canvas  {z-index:  11;}
+
+
+.icon-tool-flip {
+  clear: left !important;
+}
