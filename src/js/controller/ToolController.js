@@ -126,7 +126,7 @@
     for (var i = 0 ; i < this.tools.length ; i++) {
       var tool = this.tools[i];
       if (tool.shortcut) {
-          pskl.app.shortcutService.registerShortcut(tool.shortcut, this.onKeyboardShortcut_.bind(this, tool.toolId));
+        pskl.app.shortcutService.registerShortcut(tool.shortcut, this.onKeyboardShortcut_.bind(this, tool.toolId));
       }
     }
   };
