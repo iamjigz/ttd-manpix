@@ -28,22 +28,23 @@
       html += this.origin.x + ':' + this.origin.y + ' to ';
     }
 
-    var x = this.coordinates.x;
-    var y = this.coordinates.y;
-    var currentFrame = this.piskelController.getCurrentFrame();
-    if (currentFrame.containsPixel(x, y)) {
-      html += x + ':' + y;
-      if (this.origin) {
-        var dX = Math.abs(x - this.origin.x) + 1;
-        var dY = Math.abs(y - this.origin.y) + 1;
-        html += ' (' + dX + 'x' + dY + ')';
-      }
-    }
-
     if (pskl.app.drawingController) {
       var zoom = pskl.app.drawingController.compositeRenderer.getZoom().toFixed(2);
       html += '<div class="drawing-zoom">x' + zoom + '</div>';
     }
+
+    var x = this.coordinates.x;
+    var y = this.coordinates.y;
+    var currentFrame = this.piskelController.getCurrentFrame();
+    if (currentFrame.containsPixel(x, y)) {
+      html += '<div class="drawing-cursor-pos">' + x + ':' + y + '</div>';
+      if (this.origin) {
+        var dX = Math.abs(x - this.origin.x) + 1;
+        var dY = Math.abs(y - this.origin.y) + 1;
+        html += '<div> (' + dX + 'x' + dY + ')</div>';
+      }
+    }
+
 
     this.coordinatesContainer.innerHTML = this.getFrameSizeHTML_() + html;
   };
