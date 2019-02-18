@@ -24,13 +24,13 @@
 
   ns.CursorCoordinatesController.prototype.redraw = function () {
     var html = '';
-    if (this.origin) {
-      html += this.origin.x + ':' + this.origin.y + ' to ';
-    }
-
     if (pskl.app.drawingController) {
       var zoom = pskl.app.drawingController.compositeRenderer.getZoom().toFixed(2);
       html += '<div class="drawing-zoom">x' + zoom + '</div>';
+    }
+
+    if (this.origin) {
+      html += this.origin.x + ':' + this.origin.y + ' to ';
     }
 
     var x = this.coordinates.x;
