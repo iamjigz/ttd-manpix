@@ -22,7 +22,9 @@
       new pskl.tools.transform.Flip(),
       new pskl.tools.transform.Rotate(),
       new pskl.tools.transform.Center(),
+      new pskl.tools.settings.Resize()
     ];
+
 
     this.toolIconBuilder = new pskl.tools.ToolIconBuilder();
   };
@@ -77,7 +79,6 @@
 
     selectedToolElement.removeClass('selected');
     toolElement.addClass('selected');
-
     $.publish(Events.TOOL_SELECTED, [tool]);
   };
 

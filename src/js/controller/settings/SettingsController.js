@@ -46,7 +46,7 @@
    */
   ns.SettingsController.prototype.init = function() {
     pskl.utils.Event.addEventListener(this.settingsContainer, 'click', this.onSettingsContainerClick_, this);
-    pskl.utils.Event.addEventListener(document.body, 'click', this.onBodyClick_, this);
+    //pskl.utils.Event.addEventListener(document.body, 'click', this.onBodyClick_, this);
 
     $.subscribe(Events.CLOSE_SETTINGS_DRAWER, this.closeDrawer_.bind(this));
   };
@@ -80,6 +80,10 @@
   };
 
   ns.SettingsController.prototype.loadSetting_ = function (setting) {
+    if (setting == this.currentSetting) {
+      this.closeDrawer_();
+      return;
+    }
     this.drawerContainer.innerHTML = pskl.utils.Template.get(settings[setting].template);
 
     // when switching settings controller, destroy previously loaded controller

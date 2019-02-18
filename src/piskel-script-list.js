@@ -242,6 +242,7 @@
   "js/tools/transform/Flip.js",
   "js/tools/transform/Rotate.js",
   "js/tools/transform/TransformUtils.js",
+  "js/tools/settings/Resize.js",
 
   // Devtools
   "js/devtools/DrawingTestPlayer.js",
