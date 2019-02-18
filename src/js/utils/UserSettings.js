@@ -43,7 +43,7 @@
       'LAYER_OPACITY' : 0.2,
       'LAYER_PREVIEW' : true,
       'EXPORT_SCALE' : 1,
-      'EXPORT_TAB' : 'gif',
+      'EXPORT_TAB' : 'png',
       'EXPORT_GIF_REPEAT' : true,
       'PEN_SIZE' : 1,
       'RESIZE_SETTINGS': {

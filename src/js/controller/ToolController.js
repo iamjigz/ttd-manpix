@@ -71,6 +71,11 @@
    * @private
    */
   ns.ToolController.prototype.selectTool_ = function(tool) {
+    if (tool.applyTransformation) {
+      tool.applyTransformation({});
+      return;
+    }
+
     this.currentSelectedTool = tool;
     this.activateToolOnStage_(this.currentSelectedTool);
 
