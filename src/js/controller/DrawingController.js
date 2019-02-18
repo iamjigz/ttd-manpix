@@ -51,11 +51,7 @@
     this.initMouseBehavior();
 
     $.subscribe(Events.TOOL_SELECTED, $.proxy(function(evt, toolBehavior) {
-      if (toolBehavior.applyTransformation) {
-        toolBehavior.applyTransformation(event);
-      } else {
-        this.currentToolBehavior = toolBehavior;
-      }
+      this.currentToolBehavior = toolBehavior;
       this.overlayFrame.clear();
     }, this));
 
