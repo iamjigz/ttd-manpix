@@ -26,7 +26,6 @@
     "preversion": "grunt test build",
     "postversion": "git push && git push --tags && npm publish",
     "release": "grunt && node ./bin/copy-to-piskel-website",
-    "format": "eslint --fix src/js; prettier --write src/templates/*"
   },
   "devDependencies": {
     "dateformat": "2.0.0",
@@ -46,6 +45,7 @@
     "grunt-karma": "1.0.0",
     "grunt-leading-indent": "0.2.0",
     "grunt-nw-builder": "3.1.0",
+    "grunt-prettier": "^1.1.1",
     "grunt-replace": "1.0.1",
     "grunt-spritesmith": "6.4.0",
     "jasmine-core": "2.6.1",
