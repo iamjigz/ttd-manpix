@@ -61,6 +61,7 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.loadNpmTasks('grunt-prettier');
+  grunt.loadNpmTasks('grunt-prettify');
 
   grunt.initConfig({
     clean: {
@@ -93,7 +94,6 @@ module.exports = function(grunt) {
         '!src/js/**/lib/**/*.js',
       ],
     },
-
     prettier: {
       options: {
         // Task-specific options go here.
@@ -108,6 +108,23 @@ module.exports = function(grunt) {
       files: {
         // Target-specific file lists and/or options go here.
         'src/js/**/*.js': 'src/js/**/*.js',
+      },
+    },
+    prettify: {
+      options: {
+        indent: 2,
+        indent_char: ' ',
+        wrap_line_length: 78,
+        brace_style: 'expand',
+        unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u']
+      },
+      // Prettify a directory of files
+      all: {
+        expand: true,
+        cwd: 'src/templates/',
+        ext: '.html',
+        src: ['**/*.html'],
+        dest: 'src/templates/'
       },
     },
 
@@ -337,7 +354,7 @@ module.exports = function(grunt) {
 
   // TEST TASKS
   // Run linting
-  grunt.registerTask('lint', ['prettier', 'eslint', 'leadingIndent:css']);
+  grunt.registerTask('lint', ['prettify', 'prettier', 'eslint', 'leadingIndent:css']);
   // Run unit-tests
   grunt.registerTask('unit-test', ['karma']);
   // Run integration tests
@@ -385,9 +402,9 @@ module.exports = function(grunt) {
 
   // SERVER TASKS
   // Start webserver and watch for changes
-  grunt.registerTask('serve', ['build', 'lint', 'connect:prod', 'watch:prod']);
+  grunt.registerTask('serve', ['lint', 'build', 'connect:prod', 'watch:prod']);
   // Start webserver on src folder, in debug mode
-  grunt.registerTask('play', ['build-dev', 'lint', 'connect:dev', 'watch:dev']);
+  grunt.registerTask('play', ['lint', 'build-dev', 'connect:dev', 'watch:dev']);
 
   // ALIASES, kept for backward compatibility
   grunt.registerTask('serve-debug', ['play']);
