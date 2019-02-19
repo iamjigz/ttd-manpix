@@ -385,9 +385,9 @@ module.exports = function(grunt) {
 
   // SERVER TASKS
   // Start webserver and watch for changes
-  grunt.registerTask('serve', ['build', 'connect:prod', 'watch:prod']);
+  grunt.registerTask('serve', ['build', 'lint', 'connect:prod', 'watch:prod']);
   // Start webserver on src folder, in debug mode
-  grunt.registerTask('play', ['build-dev', 'connect:dev', 'watch:dev']);
+  grunt.registerTask('play', ['build-dev', 'lint', 'connect:dev', 'watch:dev']);
 
   // ALIASES, kept for backward compatibility
   grunt.registerTask('serve-debug', ['play']);
