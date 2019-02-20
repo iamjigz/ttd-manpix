@@ -40,7 +40,7 @@
     // Set SimplePen as default selected tool:
     this.selectTool_(this.tools[0]);
     // Activate listener on tool panel:
-    $('#tool-section').mousedown($.proxy(this.onToolIconClicked_, this));
+    $('#tool-section').mouseup($.proxy(this.onToolIconClicked_, this));
 
     $.subscribe(Events.SELECT_TOOL, this.onSelectToolEvent_.bind(this));
     $.subscribe(Events.SHORTCUTS_CHANGED, this.createToolsDom_.bind(this));
