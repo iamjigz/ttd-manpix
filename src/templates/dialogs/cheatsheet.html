@@ -30,16 +30,16 @@
     </div>
     <div class="cheatsheet-actions">
       <span class="cheatsheet-helptext" rel="tooltip" data-placement="top" title="!!!Set in CheatsheetController!!!"><b>Customize shortcuts ?</b></span>
-      <button type="button" name="cheatsheet-restore-defaults" data-action="restore-defaults" class="button cheatsheet-button cheatsheet-restore-defaults">Restore default shortcuts</button>
+      <button type="button" name="cheatsheet-restore-defaults" data-action="restore-defaults"
+      class="button cheatsheet-button cheatsheet-restore-defaults">Restore default shortcuts</button>
     </div>
-
     <!-- Event trap to capture keyboard remaps -->
     <div style="position:relative; overflow:hidden; width:1px; height:1px;">
-      <input type="text" id="cheatsheetEventTrap" style="position:absolute; top:-1000px;" />
+      <input type="text" id="cheatsheetEventTrap" style="position:absolute; top:-1000px;"
+      />
     </div>
   </div>
 </script>
-
 <script type="text/template" id="cheatsheet-shortcut-template">
   <li class="cheatsheet-shortcut {{className}}" data-shortcut-id="{{id}}">
     <div class="cheatsheet-icon {{icon}}"></div>

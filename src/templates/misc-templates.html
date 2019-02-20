@@ -6,15 +6,15 @@
       <div class="progress-bar-item progress-bar-status">{{status}}%</div>
     </div>
   </script>
-
   <!-- Tooltip container -->
   <script type="text/template" id="tooltip-container-template">
     <div class='tooltip-container'>
-      <div>{{helptext}} <span class='tooltip-shortcut'>{{shortcut}}</span></div>
+      <div>{{helptext}}
+        <span class='tooltip-shortcut'>{{shortcut}}</span>
+      </div>
       {{!descriptors!}}
     </div>
   </script>
-
   <!-- Tooltip description with modifier -->
   <script type="text/template" id="tooltip-modifier-descriptor-template">
     <div class='tooltip-descriptor'>
@@ -22,7 +22,6 @@
       {{description}}
     </div>
   </script>
-
   <!-- Simple tooltip description -->
   <script type="text/template" id="tooltip-simple-descriptor-template">
     <div class='tooltip-descriptor'>
