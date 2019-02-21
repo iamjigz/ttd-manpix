@@ -16,9 +16,8 @@
   display: flex;
 
   position: absolute;
-  left: 195px; /* Reserve room for tools on the left edge of the screen. */
+  left: 200px; /* Reserve room for tools on the left edge of the screen. */
   top: 0;
-  right: 50px; /* Reserve room for actions on the right edge of the screen. */
   bottom: 0;
 }
 
@@ -73,7 +72,7 @@
 
 .left-sticky-section.sticky-section {
   left: 0;
-  max-width: 195px;
+  max-width: 200px;
 }
 
 .left-sticky-section .tool-icon {
@@ -87,7 +86,7 @@
   font-weight: bold;
   font-family: monospace;
   margin-top: 20px;
-  margin-left: 30px;
+  margin-left: 25px;
   height: 70px;
 }
 
@@ -163,4 +162,29 @@
 .canvas.canvas-overlay       {z-index:  9;}
 .canvas.onion-skin-canvas    {z-index:  10;}
 .canvas.layers-above-canvas  {z-index:  11;}
+
+#tool-section {
+    overflow-y: scroll;
+}
+
+@media (max-width: 999px) {
+    .palettes-list-container {
+        margin-right: 4px;
+    }
+    #tool-section {
+        max-width: 105px;
+        padding-bottom: 20px;
+    }
+    .column-wrapper {
+        left: 105px;
+    }
+    .cursor-coordinates {
+      margin-top: 15px;
+      margin-left: 20px;
+      height: 35px;
+    }
+    .right-sticky-section.expanded {
+      left: 106px !important;
+    }
+}
 

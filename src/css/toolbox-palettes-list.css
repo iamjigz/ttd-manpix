@@ -70,13 +70,13 @@
   cursor: pointer;
   float: left;
   margin: 0 0 5px 5px;
-  width: calc((100% - 30px) / 5);
+  width: 32px;
   height: 32px;
   position: relative;
 }
 
 .palettes-list-colors.tiny > .palettes-list-color {
-  width: calc((100% - 35px) / 10);
+  width: 16px;
   height: 16px;
 }
 
