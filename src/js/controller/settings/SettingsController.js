@@ -46,7 +46,7 @@
    */
   ns.SettingsController.prototype.init = function() {
     pskl.utils.Event.addEventListener(this.settingsContainer, 'click', this.onSettingsContainerClick_, this);
-    //pskl.utils.Event.addEventListener(document.body, 'click', this.onBodyClick_, this);
+    pskl.utils.Event.addEventListener(document.body, 'click', this.onBodyClick_, this);
 
     $.subscribe(Events.CLOSE_SETTINGS_DRAWER, this.closeDrawer_.bind(this));
   };
@@ -72,7 +72,8 @@
 
     var isInDrawerContainer = pskl.utils.Dom.isParent(target, this.drawerContainer);
     var isInSettingsIcon = target.dataset.setting;
-    var isInSettingsContainer = isInDrawerContainer || isInSettingsIcon;
+    var isToolSetting = (target.getAttribute('data-tool-id') || '').match(/settings-/);
+    var isInSettingsContainer = isInDrawerContainer || isInSettingsIcon || isToolSetting;
 
     if (this.isExpanded && !isInSettingsContainer) {
       this.closeDrawer_();
