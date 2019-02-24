@@ -19,9 +19,14 @@
     this.onScaleChanged_ = this.onScaleChanged_.bind(this);
   };
 
-  pskl.utils.inherit(ns.PngExportController, pskl.controller.settings.AbstractSettingController);
+  pskl.utils.inherit(
+    ns.PngExportController,
+    pskl.controller.settings.AbstractSettingController
+  );
 
-  ns.PngExportController.prototype.init = function () {
+  ns.PngExportController.prototype.init = function() {
+    this.showGrid = true;
+
     this.layoutContainer = document.querySelector('.png-export-layout-section');
     this.dimensionInfo = document.querySelector('.png-export-dimension-info');
 
@@ -32,6 +37,9 @@
     var downloadPixiButton = document.querySelector('.png-pixi-download-button');
     var dataUriButton = document.querySelector('.datauri-open-button');
 
+    var showGridInput = document.querySelector('input#png-show-grid');
+    showGridInput.checked = this.showGrid;
+
     this.initLayoutSection_();
     this.updateDimensionLabel_();
 
@@ -39,6 +47,7 @@
     this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
     this.addEventListener(downloadPixiButton, 'click', this.onPixiDownloadClick_);
     this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
+    this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
   };
 
@@ -62,7 +71,7 @@
     }
   };
 
-  ns.PngExportController.prototype.updateDimensionLabel_ = function () {
+  ns.PngExportController.prototype.updateDimensionLabel_ = function() {
     var zoom = this.exportController.getExportZoom();
     var frames = this.piskelController.getFrameCount();
     var width = this.piskelController.getWidth() * zoom;
@@ -130,13 +139,38 @@
 
   ns.PngExportController.prototype.createPngSpritesheet_ = function () {
     var renderer = new pskl.rendering.PiskelRenderer(this.piskelController);
-    var outputCanvas = renderer.renderAsCanvas(this.getColumns_(), this.getRows_());
+    var outputCanvas = renderer.renderAsCanvas(
+      this.getColumns_(),
+      this.getRows_()
+    );
     var width = outputCanvas.width;
     var height = outputCanvas.height;
 
     var zoom = this.exportController.getExportZoom();
     if (zoom != 1) {
-      outputCanvas = pskl.utils.ImageResizer.resize(outputCanvas, width * zoom, height * zoom, false);
+      outputCanvas = pskl.utils.ImageResizer.resize(
+        outputCanvas,
+        width * zoom,
+        height * zoom,
+        false
+      );
+
+      if (this.showGrid) {
+        var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+        var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
+        var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
+        var ctx = outputCanvas.getContext("2d");
+
+        ctx.fillStyle = gridColor;
+        for (var i = 1; i <= height; i++) {
+          var y = i * zoom * gridSpacing;
+          ctx.fillRect(0, y, zoom * width, gridWidth);
+        }
+        for (var j = 1; j <= width; j++) {
+          var x = j * zoom * gridSpacing;
+          ctx.fillRect(x, 0, gridWidth, zoom * height);
+        }
+      }
     }
 
     return outputCanvas;
@@ -209,12 +243,22 @@
   ns.PngExportController.prototype.onDataUriClick_ = function (evt) {
     var popup = window.open('about:blank');
     var dataUri = this.createPngSpritesheet_().toDataURL('image/png');
-    window.setTimeout(function () {
-      var html = pskl.utils.Template.getAndReplace('data-uri-export-partial', {
-        src: dataUri
-      });
-      popup.document.title = dataUri;
-      popup.document.body.innerHTML = html;
-    }.bind(this), 500);
+    window.setTimeout(
+      function() {
+        var html = pskl.utils.Template.getAndReplace(
+          'data-uri-export-partial',
+          {
+            src: dataUri
+          }
+        );
+        popup.document.title = dataUri;
+        popup.document.body.innerHTML = html;
+      }.bind(this),
+      500
+    );
+  };
+
+  ns.PngExportController.prototype.onShowGridChange_ = function(evt) {
+    this.showGrid = evt.target.checked;
   };
 })();

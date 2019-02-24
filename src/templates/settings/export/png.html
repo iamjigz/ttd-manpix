@@ -1,6 +1,6 @@
 <script type="text/html" id="templates/settings/export/png.html">
   <div class="export-panel-png">
-    <div class="export-panel-header export-info">Export your animation as a PNG spritesheet containing all frames.</div>
+    <div class="export-panel-header export-info">Export your animation as a PNG image.</div>
     <div class="export-panel-section  png-export-layout-section">
       <div class="highlight" style="padding-bottom: 5px;">Spritesheet layout options:</div>
       <div style="display: flex; line-height: 20px;">
@@ -12,6 +12,13 @@
           <span>Rows</span>
           <input readonly="true" class="textfield" id="png-export-rows" name="png-export-rows">
         </div>
+      </div>
+    </div>
+    <div class="export-panel-section export-panel-row">
+    <div>
+      <input type="checkbox" id="png-show-grid">
+      <label for="png-show-grid">Include grid in image</label>
+      <i class="png-grid-note">Note: You must configure the grid first in the preferences</i>
       </div>
     </div>
     <div class="export-panel-section export-panel-row">
