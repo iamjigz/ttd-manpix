@@ -150,8 +150,22 @@
   flex-shrink: 0;
 }
 
-.export-panel-png .textfield {
-  width: 50px;
+.export-panel-png .png-enable-grid {
+    width: 100%;
+}
+
+.export-panel-png .png-enable-grid input,
+.export-panel-png .png-enable-grid label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.export-panel-png .png-grid-note {
+    margin-top: 5px;
+    margin-left: 5px;
+    display: block;
+    width: 100%;
+    font-size: 11px;
 }
 
 .png-export-dimension-info,

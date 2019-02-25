@@ -25,7 +25,7 @@
     TRANSFORM_SHOW_MORE: 'TRANSFORM_SHOW_MORE',
     PREFERENCES_TAB: 'PREFERENCES_TAB',
     KEY_TO_DEFAULT_VALUE_MAP_ : {
-      'GRID_COLOR' : Constants.TRANSPARENT_COLOR,
+      'GRID_COLOR' : 'light-gray',
       'GRID_ENABLED' : false,
       'GRID_WIDTH' : 1,
       'GRID_SPACING' : 1,

@@ -2,7 +2,25 @@
   var ns = $.namespace('pskl.utils');
 
   ns.ColorUtils = {
-    getUnusedColor : function (usedColors) {
+    hex2Rgb: function(hex) {
+      var values = hex.match(/\w\w/g);
+      if (!values) {
+        values = hex.match(/\w/g);
+      }
+      if (!values || values.length != 3) {
+        return hex;
+      }
+      return (
+        "rgb(" +
+        values
+          .map(function(n) {
+            return parseInt(n, 16);
+          })
+          .join(", ") +
+        ")"
+      );
+    },
+    getUnusedColor : function(usedColors) {
       usedColors = usedColors || [];
       // create check map
       var colorMap = {};
