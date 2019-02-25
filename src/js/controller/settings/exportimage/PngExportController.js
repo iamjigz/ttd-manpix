@@ -161,14 +161,21 @@
         var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
         var ctx = outputCanvas.getContext("2d");
 
-        ctx.fillStyle = pskl.utils.ColorUtils.hex2Rgb(gridColor);
+        gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
+        ctx.fillStyle = gridColor;
+        var fillRect = ctx.fillRect.bind(ctx);
+        if (gridColor === Constants.TRANSPARENT_COLOR) {
+          fillRect = ctx.clearRect.bind(ctx);
+
+        }
+
         for (var i = 1; i <= height; i++) {
           var y = i * zoom * gridSpacing;
-          ctx.fillRect(0, y, zoom * width, gridWidth);
+          fillRect(0, y, zoom * width, gridWidth);
         }
         for (var j = 1; j <= width; j++) {
           var x = j * zoom * gridSpacing;
-          ctx.fillRect(x, 0, gridWidth, zoom * height);
+          fillRect(x, 0, gridWidth, zoom * height);
         }
       }
     }
