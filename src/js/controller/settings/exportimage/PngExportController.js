@@ -161,7 +161,7 @@
         var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
         var ctx = outputCanvas.getContext("2d");
 
-        ctx.fillStyle = gridColor;
+        ctx.fillStyle = pskl.utils.ColorUtils.hex2Rgb(gridColor);
         for (var i = 1; i <= height; i++) {
           var y = i * zoom * gridSpacing;
           ctx.fillRect(0, y, zoom * width, gridWidth);
