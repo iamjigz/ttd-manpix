@@ -84,12 +84,14 @@
     $.publish(Events.EXPORT_SCALE_CHANGED);
 
     this.scaleInput.value = Math.round(zoom);
-    if (zoom >= 1 && zoom <= 32) {
+    if (zoom >= 1 && zoom <= 128) {
       this.onScaleChange_();
     }
   };
 
-  ns.ExportController.prototype.getExportZoom = function () {
-    return parseInt(this.widthInput.value, 10) / this.piskelController.getWidth();
+  ns.ExportController.prototype.getExportZoom = function() {
+    return (
+      parseInt(this.widthInput.value, 10) / this.piskelController.getWidth()
+    );
   };
 })();
