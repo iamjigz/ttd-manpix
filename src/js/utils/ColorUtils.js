@@ -11,13 +11,13 @@
         return hex;
       }
       return (
-        "rgb(" +
+        'rgb(' +
         values
           .map(function(n) {
             return parseInt(n, 16);
           })
-          .join(", ") +
-        ")"
+          .join(', ') +
+        ')'
       );
     },
     getUnusedColor : function(usedColors) {

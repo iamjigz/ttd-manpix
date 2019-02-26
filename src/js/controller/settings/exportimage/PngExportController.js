@@ -159,7 +159,7 @@
         var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
         var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
         var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
-        var ctx = outputCanvas.getContext("2d");
+        var ctx = outputCanvas.getContext('2d');
 
         gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
         ctx.fillStyle = gridColor;
