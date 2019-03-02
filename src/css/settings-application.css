@@ -86,7 +86,6 @@
   margin: 5px 5px 0 5px;
 }
 
-
 .grid-colors-list {
   overflow: hidden;
   padding: 0 5px;
@@ -118,6 +117,10 @@
 
 .settings-section-preferences .button-primary {
   margin-top: 10px;
+}
+
+.settings-section-preferences .tab-list {
+  display: none;
 }
 
 .settings-version-info {

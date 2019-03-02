@@ -30,10 +30,32 @@
   align-items: center;
   justify-content: center;
 }
+.button-group {
+  float: right;
+}
+.button-group > .button-primary {
+  display: inline;
+  margin-right: 5px;
+  padding: 5px;
+  font-size: 15px;
+  border-radius: 3px;
+  color: black;
+  background: gold;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 <div class="fake-piskelapp-header">
-  <a href="index.html" target="_blank" class="new-piskel-desktop button button-primary"
-  title="Create a new sprite" rel="tooltip" data-placement="left">+</a
-  >
   <span class="piskel-name"></span>
+  <div class="button-group">
+    <a href="index.html" target="_blank" title="Create new sprite" rel="tooltip" class="button button-primary"
+    data-placement="left">
+			Create Sprite
+		</a>
+    <a href="index.html" target="_blank" title="Sign In" rel="tooltip" class="button button-primary"
+    data-placement="left">
+			Sign In
+		</a>
+  </div>
 </div>
