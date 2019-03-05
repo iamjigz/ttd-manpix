@@ -1,10 +1,10 @@
-(function () {
+(function() {
   var ns = $.namespace('pskl.utils');
 
   var BASE64_REGEX = /\s*;\s*base64\s*(?:;|$)/i;
 
   ns.BlobUtils = {
-    dataToBlob : function(dataURI, type, callback) {
+    dataToBlob: function(dataURI, type, callback) {
       var headerEnd = dataURI.indexOf(',');
       var data = dataURI.substring(headerEnd + 1);
       var isBase64 = BASE64_REGEX.test(dataURI.substring(0, headerEnd));
@@ -17,13 +17,15 @@
         blob.data = data;
         blob.size = data.length;
       } else if (Uint8Array) {
-        var blobData = isBase64 ? pskl.utils.Base64.decode(data) : decodeURIComponent(data);
-        blob = new Blob([blobData], {type: type});
+        var blobData = isBase64 ?
+          pskl.utils.Base64.decode(data) :
+          decodeURIComponent(data);
+        blob = new Blob([blobData], { type: type });
       }
       callback(blob);
     },
 
-    canvasToBlob : function (canvas, callback, type /*, ...args*/) {
+    canvasToBlob: function(canvas, callback, type /*, ...args*/) {
       type = type || 'image/png';
 
       if (canvas.mozGetAsFile) {
@@ -35,9 +37,13 @@
       }
     },
 
-    stringToBlob : function (string, callback, type) {
+    stringToBlob: function(string, callback, type) {
       type = type || 'text/plain';
-      pskl.utils.BlobUtils.dataToBlob('data:' + type + ',' + string, type, callback);
+      pskl.utils.BlobUtils.dataToBlob(
+        'data:' + type + ',' + string,
+        type,
+        callback
+      );
     }
   };
 })();
