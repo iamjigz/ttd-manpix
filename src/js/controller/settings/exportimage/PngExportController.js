@@ -1,17 +1,17 @@
 (function() {
-  var ns = $.namespace("pskl.controller.settings.exportimage");
+  var ns = $.namespace('pskl.controller.settings.exportimage');
 
   var dimensionInfoPattern =
-    "{{width}} x {{height}} px, {{frames}}<br/>{{columns}}, {{rows}}.";
+    '{{width}} x {{height}} px, {{frames}}<br/>{{columns}}, {{rows}}.';
 
   var replace = pskl.utils.Template.replace;
 
   // Helper to return "X items" or "1 item" if X is 1.
   var pluralize = function(word, count) {
     if (count === 1) {
-      return "1 " + word;
+      return '1 ' + word;
     }
-    return count + " " + word + "s";
+    return count + ' ' + word + 's';
   };
 
   ns.PngExportController = function(piskelController, exportController) {
@@ -28,35 +28,35 @@
   ns.PngExportController.prototype.init = function() {
     this.showGrid = true;
 
-    this.layoutContainer = document.querySelector(".png-export-layout-section");
-    this.dimensionInfo = document.querySelector(".png-export-dimension-info");
+    this.layoutContainer = document.querySelector('.png-export-layout-section');
+    this.dimensionInfo = document.querySelector('.png-export-dimension-info');
 
-    this.rowsInput = document.querySelector("#png-export-rows");
-    this.columnsInput = document.querySelector("#png-export-columns");
+    this.rowsInput = document.querySelector('#png-export-rows');
+    this.columnsInput = document.querySelector('#png-export-columns');
 
-    var downloadButton = document.querySelector(".png-download-button");
-    var downloadPDFButton = document.querySelector(".png-download-pdf-button");
+    var downloadButton = document.querySelector('.png-download-button');
+    var downloadPDFButton = document.querySelector('.png-download-pdf-button');
     var downloadPixiButton = document.querySelector(
-      ".png-pixi-download-button"
+      '.png-pixi-download-button'
     );
-    var dataUriButton = document.querySelector(".datauri-open-button");
+    var dataUriButton = document.querySelector('.datauri-open-button');
 
-    var showGridInput = document.querySelector("input#png-show-grid");
+    var showGridInput = document.querySelector('input#png-show-grid');
     showGridInput.checked = this.showGrid;
 
     this.initLayoutSection_();
     this.updateDimensionLabel_();
 
-    this.addEventListener(this.columnsInput, "input", this.onColumnsInput_);
-    this.addEventListener(downloadButton, "click", this.onDownloadClick_);
-    this.addEventListener(downloadPDFButton, "click", this.onDownloadPDFClick_);
+    this.addEventListener(this.columnsInput, 'input', this.onColumnsInput_);
+    this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
+    this.addEventListener(downloadPDFButton, 'click', this.onDownloadPDFClick_);
     this.addEventListener(
       downloadPixiButton,
-      "click",
+      'click',
       this.onPixiDownloadClick_
     );
-    this.addEventListener(dataUriButton, "click", this.onDataUriClick_);
-    this.addEventListener(showGridInput, "change", this.onShowGridChange_);
+    this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
+    this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
   };
 
@@ -72,9 +72,9 @@
     var frames = this.piskelController.getFrameCount();
     if (frames === 1) {
       // Hide the layout section if only one frame is defined.
-      this.layoutContainer.style.display = "none";
+      this.layoutContainer.style.display = 'none';
     } else {
-      this.columnsInput.setAttribute("max", frames);
+      this.columnsInput.setAttribute('max', frames);
       this.columnsInput.value = this.getBestFit_();
       this.onColumnsInput_();
     }
@@ -94,9 +94,9 @@
     this.dimensionInfo.innerHTML = replace(dimensionInfoPattern, {
       width: width,
       height: height,
-      rows: pluralize("row", rows),
-      columns: pluralize("column", columns),
-      frames: pluralize("frame", frames)
+      rows: pluralize('row', rows),
+      columns: pluralize('column', columns),
+      frames: pluralize('frame', frames)
     });
   };
 
@@ -127,7 +127,7 @@
    */
   ns.PngExportController.prototype.onColumnsInput_ = function() {
     var value = this.columnsInput.value;
-    if (value === "") {
+    if (value === '') {
       // Skip the synchronization if the input is empty.
       return;
     }
@@ -175,7 +175,7 @@
       );
 
       if (this.showGrid) {
-        var ctx = outputCanvas.getContext("2d");
+        var ctx = outputCanvas.getContext('2d');
 
         gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
         ctx.fillStyle = gridColor;
@@ -210,10 +210,10 @@
     var fontSize = Math.floor(headerHeight / 6);
     var imgMargin = Math.floor(fontSize / 2);
 
-    var orientation = canvas.width > canvas.height ? "l" : "p";
+    var orientation = canvas.width > canvas.height ? 'l' : 'p';
     var doc = new jsPDF({
       orientation: orientation,
-      unit: "pt",
+      unit: 'pt',
       format: [
         canvas.width * 0.75,
         canvas.height * 0.75 + (headerHeight + imgMargin * 2)
@@ -221,24 +221,24 @@
     });
 
     //A4 size: [ 841.89, 595.28],
-    var n = orientation == "l" ? 841.89 : 595.28;
+    var n = orientation == 'l' ? 841.89 : 595.28;
 
-    doc.setFontStyle("bold");
+    doc.setFontStyle('bold');
     doc.setFontSize(fontSize);
     doc.text(
       // TODO: Header and PDP must be fetched through ajax
-      ["manufacturedupixel.com", "00 Avenue AAA BBB CCC, 00000 DDD, France"],
+      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
       imgMargin * 2.5 + headerHeight,
       headerHeight / 2,
       {
-        baseline: "middle"
+        baseline: 'middle'
       }
     );
 
-    var logo = $("#manufacture-du-pixel");
+    var logo = $('#manufacture-du-pixel');
     doc.addImage(
       logo[0],
-      "PNG",
+      'PNG',
       imgMargin,
       imgMargin,
       headerHeight,
@@ -253,7 +253,7 @@
 
     doc.addImage(
       canvas,
-      "PNG",
+      'PNG',
       0,
       imgMargin * 2 + headerHeight,
       canvas.width * 0.75,
@@ -266,7 +266,7 @@
   ns.PngExportController.prototype.downloadCanvas_ = function(canvas) {
     // Generate file name
     var name = this.piskelController.getPiskel().getDescriptor().name;
-    var fileName = name + ".png";
+    var fileName = name + '.png';
 
     // Transform to blob and start download.
     pskl.utils.BlobUtils.canvasToBlob(
@@ -287,8 +287,8 @@
     var name = this.piskelController.getPiskel().getDescriptor().name;
 
     zip.file(
-      name + ".png",
-      pskl.utils.CanvasUtils.getBase64FromCanvas(canvas) + "\n",
+      name + '.png',
+      pskl.utils.CanvasUtils.getBase64FromCanvas(canvas) + '\n',
       { base64: true }
     );
 
@@ -307,35 +307,35 @@
         spriteSourceSize: { x: 0, y: 0, w: width, h: height },
         sourceSize: { w: width, h: height }
       };
-      frames[name + i + ".png"] = frame;
+      frames[name + i + '.png'] = frame;
     }
 
     var json = {
       frames: frames,
       meta: {
-        app: "https://github.com/piskelapp/piskel/",
-        version: "1.0",
-        image: name + ".png",
-        format: "RGBA8888",
+        app: 'https://github.com/piskelapp/piskel/',
+        version: '1.0',
+        image: name + '.png',
+        format: 'RGBA8888',
         size: { w: canvas.width, h: canvas.height }
       }
     };
-    zip.file(name + ".json", JSON.stringify(json));
+    zip.file(name + '.json', JSON.stringify(json));
 
     var blob = zip.generate({
-      type: "blob"
+      type: 'blob'
     });
 
-    pskl.utils.FileUtils.downloadAsFile(blob, name + ".zip");
+    pskl.utils.FileUtils.downloadAsFile(blob, name + '.zip');
   };
 
   ns.PngExportController.prototype.onDataUriClick_ = function(evt) {
-    var popup = window.open("about:blank");
-    var dataUri = this.createPngSpritesheet_().toDataURL("image/png");
+    var popup = window.open('about:blank');
+    var dataUri = this.createPngSpritesheet_().toDataURL('image/png');
     window.setTimeout(
       function() {
         var html = pskl.utils.Template.getAndReplace(
-          "data-uri-export-partial",
+          'data-uri-export-partial',
           {
             src: dataUri
           }

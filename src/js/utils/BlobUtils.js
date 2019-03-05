@@ -26,10 +26,10 @@
     },
 
     canvasToBlob: function(canvas, callback, type, dpi) {
-      type = type || "image/png";
+      type = type || 'image/png';
 
       if (canvas.mozGetAsFile) {
-        callback(canvas.mozGetAsFile("canvas", type));
+        callback(canvas.mozGetAsFile('canvas', type));
       } else {
         var args = Array.prototype.slice.call(arguments, 2);
         var dataURI = canvas.toDataURL.apply(canvas, args);
