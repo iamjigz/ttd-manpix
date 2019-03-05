@@ -14,7 +14,8 @@
     "module": true,
     "require": true,
     "Q": true,
-    "Promise": true
+    "Promise": true,
+    "shutterStock": true,
   },
   "rules": {
     "no-undef": 2,

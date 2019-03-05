@@ -6,6 +6,7 @@
   "js/lib/jquery-ui-1.10.3.custom.js",
   "js/lib/pubsub.js",
   "js/lib/bootstrap/bootstrap.js",
+  "js/lib/change-dpi.js",
   "js/lib/jspdf.min.js",
 
   // Application wide configuration

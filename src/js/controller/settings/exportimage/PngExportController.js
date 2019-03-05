@@ -269,9 +269,14 @@
     var fileName = name + ".png";
 
     // Transform to blob and start download.
-    pskl.utils.BlobUtils.canvasToBlob(canvas, function(blob) {
-      pskl.utils.FileUtils.downloadAsFile(blob, fileName);
-    });
+    pskl.utils.BlobUtils.canvasToBlob(
+      canvas,
+      function(blob) {
+        pskl.utils.FileUtils.downloadAsFile(blob, fileName);
+      },
+      'image/png',
+      300
+    );
   };
 
   ns.PngExportController.prototype.onPixiDownloadClick_ = function() {
