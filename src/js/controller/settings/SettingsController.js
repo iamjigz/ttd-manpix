@@ -25,6 +25,10 @@
     'save' : {
       template : 'templates/settings/save.html',
       controller : ns.SaveController
+    },
+    'color-counter' : {
+      template : 'templates/settings/color-counter.html',
+      controller : ns.ColorCounterController
     }
   };
 
