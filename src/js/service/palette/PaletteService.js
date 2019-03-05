@@ -10,27 +10,35 @@
     return '#' + rgb.map(dec2Hex).join('');
   };
 
+  var colors = [
+      {name: 'black', value: [0,   0,   0]},
+      {name: 'white', value: [255, 255, 255]},
+      {name: 'silver', value: [161, 173, 171]},
+      {name: 'gray', value: [66,  69,  76]},
+      {name: 'orange', value: [241, 106,  40]},
+      {name: 'yellow', value: [255, 238,  74]},
+      {name: 'dark green', value: [35,  72,  28]},
+      {name: 'green', value: [61, 157,  49]},
+      {name: 'light blue', value: [31, 163, 211]},
+      {name: 'blue', value: [20,  32, 150]},
+      {name: 'violet', value: [81,  27, 123]},
+      {name: 'purple', value: [190,  25, 101]},
+      {name: 'pink', value: [235, 160, 191]},
+      {name: 'red orange', value: [249,  33,  52]},
+      {name: 'flesh', value: [253, 201, 141]},
+      {name: 'brown', value: [101,  56,   0]},
+  ];
+
+  for (var k in colors) {
+    colors[k].value = rgbToHex(colors[k].value);
+  }
+
   var fixedPalette = {
     'id': 'fixed-pallete',
     'name': 'Fixed Palette',
-    'colors': [
-          [0,   0,   0],
-          [255, 255, 255],
-          [161, 173, 171],
-          [66,  69,  76],
-          [241, 106,  40],
-          [255, 238,  74],
-          [35,  72,  28],
-          [61, 157,  49],
-          [31, 163, 211],
-          [20,  32, 150],
-          [81,  27, 123],
-          [190,  25, 101],
-          [235, 160, 191],
-          [249,  33,  52],
-          [253, 201, 141],
-          [101,  56,   0],
-    ].map(rgbToHex)
+    'colors': colors.map(function(color) {
+      return color.value;
+    }),
   };
 
   var palettes = [fixedPalette].map(function (palette) {
@@ -50,6 +58,11 @@
   ns.PaletteService.prototype.getPaletteById = function (paletteId) {
     return palettes[0];
   };
+
+  ns.PaletteService.prototype.getFixedNamedColors = function () {
+    return colors;
+  };
+
 
   ns.PaletteService.prototype.savePalette = function (palette) {
     var palettes = this.getPalettes();

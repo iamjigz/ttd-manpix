@@ -22,7 +22,8 @@
       new pskl.tools.transform.Flip(),
       new pskl.tools.transform.Rotate(),
       new pskl.tools.transform.Center(),
-      new pskl.tools.settings.Resize()
+      new pskl.tools.settings.Resize(),
+      new pskl.tools.settings.Counter()
     ];
 
 
