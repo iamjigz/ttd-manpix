@@ -4,6 +4,7 @@
     "browser": true
   },
   "globals": {
+    "jsPDF": true,
     "$": true,
     "jQuery": true,
     "pskl": true,

@@ -164,6 +164,9 @@
 
     var zoom = this.exportController.getExportZoom();
     if (zoom != 1) {
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
+      var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
       outputCanvas = pskl.utils.ImageResizer.resize(
         outputCanvas,
         width * zoom,
@@ -172,10 +175,7 @@
       );
 
       if (this.showGrid) {
-        var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
-        var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
-        var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
-        var ctx = outputCanvas.getContext('2d');
+        var ctx = outputCanvas.getContext("2d");
 
         gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
         ctx.fillStyle = gridColor;
@@ -186,11 +186,11 @@
 
         for (var i = 1; i <= height; i++) {
           var y = i * zoom * gridSpacing;
-          fillRect(0, y, zoom * width, gridWidth);
+          fillRect(0, y, zoom * width, (gridWidth * zoom) / 32);
         }
         for (var j = 1; j <= width; j++) {
           var x = j * zoom * gridSpacing;
-          fillRect(x, 0, gridWidth, zoom * height);
+          fillRect(x, 0, (gridWidth * zoom) / 32, zoom * height);
         }
       }
     }
@@ -202,6 +202,64 @@
     // Create PNG export.
     var canvas = this.createPngSpritesheet_();
     this.downloadCanvas_(canvas);
+  };
+
+  ns.PngExportController.prototype.onDownloadPDFClick_ = function(evt) {
+    var canvas = this.createPngSpritesheet_();
+    var headerHeight = canvas.height / 15;
+    var fontSize = Math.floor(headerHeight / 6);
+    var imgMargin = Math.floor(fontSize / 2);
+
+    var orientation = canvas.width > canvas.height ? "l" : "p";
+    var doc = new jsPDF({
+      orientation: orientation,
+      unit: "pt",
+      format: [
+        canvas.width * 0.75,
+        canvas.height * 0.75 + (headerHeight + imgMargin * 2)
+      ]
+    });
+
+    //A4 size: [ 841.89, 595.28],
+    var n = orientation == "l" ? 841.89 : 595.28;
+
+    doc.setFontStyle("bold");
+    doc.setFontSize(fontSize);
+    doc.text(
+      // TODO: Header and PDP must be fetched through ajax
+      ["manufacturedupixel.com", "00 Avenue AAA BBB CCC, 00000 DDD, France"],
+      imgMargin * 2.5 + headerHeight,
+      headerHeight / 2,
+      {
+        baseline: "middle"
+      }
+    );
+
+    var logo = $("#manufacture-du-pixel");
+    doc.addImage(
+      logo[0],
+      "PNG",
+      imgMargin,
+      imgMargin,
+      headerHeight,
+      headerHeight
+    );
+    doc.line(
+      0,
+      imgMargin * 2 + headerHeight,
+      Math.max(canvas.width, n),
+      imgMargin * 2 + headerHeight
+    );
+
+    doc.addImage(
+      canvas,
+      "PNG",
+      0,
+      imgMargin * 2 + headerHeight,
+      canvas.width * 0.75,
+      canvas.height * 0.75
+    );
+    doc.save();
   };
 
   // Used and overridden in casper integration tests.

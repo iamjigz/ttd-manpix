@@ -2,6 +2,12 @@
  * Application layout
  */
 
+.flex-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .main-wrapper {
   position: fixed;
   top: 5px;
@@ -187,4 +193,3 @@
       left: 106px !important;
     }
 }
-
