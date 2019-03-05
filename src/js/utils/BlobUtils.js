@@ -25,14 +25,17 @@
       callback(blob);
     },
 
-    canvasToBlob: function(canvas, callback, type /*, ...args*/) {
-      type = type || 'image/png';
+    canvasToBlob: function(canvas, callback, type, dpi) {
+      type = type || "image/png";
 
       if (canvas.mozGetAsFile) {
-        callback(canvas.mozGetAsFile('canvas', type));
+        callback(canvas.mozGetAsFile("canvas", type));
       } else {
         var args = Array.prototype.slice.call(arguments, 2);
         var dataURI = canvas.toDataURL.apply(canvas, args);
+        if (dpi) {
+          dataURI = shutterStock.changeDpiDataUrl(dataURI, dpi);
+        }
         pskl.utils.BlobUtils.dataToBlob(dataURI, type, callback);
       }
     },
