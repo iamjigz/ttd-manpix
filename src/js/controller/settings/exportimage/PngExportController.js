@@ -259,7 +259,7 @@
       canvas.width * 0.75,
       canvas.height * 0.75
     );
-    doc.save();
+    doc.save('piskel.pdf');
   };
 
   // Used and overridden in casper integration tests.
