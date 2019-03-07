@@ -1,0 +1,30 @@
+<script type="text/html" id="templates/settings/export/pdf.html">
+  <div class="export-panel-pdf">
+    <div class="export-panel-header export-info">Export your animation as a PDF image.</div>
+    <div class="export-panel-section  pdf-export-layout-section">
+      <div class="highlight" style="padding-bottom: 5px;">Spritesheet layout options:</div>
+      <div style="display: flex; line-height: 20px;">
+        <div style="flex: 1;">
+          <span>Columns</span>
+          <input type="number" min="1" class="textfield" id="pdf-export-columns" name="pdf-export-columns">
+        </div>
+        <div style="flex: 1;">
+          <span>Rows</span>
+          <input readonly="true" class="textfield" id="pdf-export-rows" name="pdf-export-rows">
+        </div>
+      </div>
+    </div>
+    <div class="export-panel-section export-panel-row">
+      <div>
+        <input type="checkbox" id="pdf-show-grid">
+        <label for="pdf-show-grid">Include grid in image</label>
+        <i class="pdf-grid-note">Note: You must configure the grid first in the preferences</i>
+      </div>
+    </div>
+    <div class="export-panel-section export-panel-row flex-row">
+      <button type="button" class="button button-primary pdf-download-button">Download</button>
+      <span class="pdf-export-datauri-info export-info">Download as a PDF file with
+        <br />scale set to 1cm (38px)</span>
+    </div>
+  </div>
+</script>

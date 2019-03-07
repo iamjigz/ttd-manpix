@@ -15,16 +15,33 @@
       </div>
     </div>
     <div class="export-panel-section export-panel-row">
+      <div class="settings-item export-scale" title="Scale the animation for export"
+      rel="tooltip" data-placement="top">
+        <label for="scale-input">Scale</label>
+        <input type="range" class="scale-input" name="scale-input" min="1" max="128" step="1"
+        />
+        <span class="scale-text"></span>
+      </div>
+      <div class="settings-item export-resize hidden">
+        <span class="resize-label">Resolution</span>
+        <input type="text" class="textfield  resize-field  resize-width" autocomplete="off"
+        name="resize-width" />
+        <div class="resize-label">x</div>
+        <input type="text" class="textfield  resize-field  resize-height" autocomplete="off"
+        name="resize-height" />
+      </div>
+    </div>
+    <div class="export-panel-section export-panel-row">
       <div>
         <input type="checkbox" id="png-show-grid">
         <label for="png-show-grid">Include grid in image</label>
         <i class="png-grid-note">Note: You must configure the grid first in the preferences</i>
       </div>
     </div>
-    <div class="export-panel-section export-panel-row flex-row">
-      <button type="button" class="button button-primary png-download-button">Download as PNG</button>
-      <button type="button" class="button button-primary png-download-pdf-button">Download as PDF</button>
+    <div class="export-panel-section export-panel-row">
+      <button type="button" class="button button-primary png-download-button">Download</button>
       <span class="png-export-dimension-info export-info hidden"></span>
+      <span class="png-export-datauri-info export-info">Download as a PNG file</span>
     </div>
     <div class="export-panel-section export-panel-row png-export-datauri-section hidden">
       <button type="button" style="white-space: nowrap;" class="button button-primary datauri-open-button">To data-uri</button>
