@@ -57,64 +57,6 @@
     }
   };
 
-  ns.PngExportController.prototype.onDownloadPDFClick_ = function(evt) {
-    var canvas = this.createPngSpritesheet_();
-    var headerHeight = canvas.height / 15;
-    var fontSize = Math.floor(headerHeight / 6);
-    var imgMargin = Math.floor(fontSize / 2);
-
-    var orientation = canvas.width > canvas.height ? 'l' : 'p';
-    var doc = new jsPDF({
-      orientation: orientation,
-      unit: 'pt',
-      format: [
-        canvas.width * 0.75,
-        canvas.height * 0.75 + (headerHeight + imgMargin * 2)
-      ]
-    });
-
-    //A4 size: [ 841.89, 595.28],
-    var n = orientation == 'l' ? 841.89 : 595.28;
-
-    doc.setFontStyle('bold');
-    doc.setFontSize(fontSize);
-    doc.text(
-      // TODO: Header and PDP must be fetched through ajax
-      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
-      imgMargin * 2.5 + headerHeight,
-      headerHeight / 2,
-      {
-        baseline: 'middle'
-      }
-    );
-
-    var logo = $('#manufacture-du-pixel');
-    doc.addImage(
-      logo[0],
-      'PNG',
-      imgMargin,
-      imgMargin,
-      headerHeight,
-      headerHeight
-    );
-    doc.line(
-      0,
-      imgMargin * 2 + headerHeight,
-      Math.max(canvas.width, n),
-      imgMargin * 2 + headerHeight
-    );
-
-    doc.addImage(
-    canvas.toDataURL('image/png', 1),
-      'PNG',
-      0,
-      imgMargin * 2 + headerHeight,
-      canvas.width * 0.75,
-      canvas.height * 0.75
-    );
-    doc.save('piskel.pdf');
-  };
-
 
   ns.PdfExportController.prototype.destroy = function() {
     this.superclass.destroy.call(this);
@@ -236,7 +178,7 @@
 
   ns.PdfExportController.prototype.onDownloadClick_ = function(evt) {
     var canvas = this.createPngSpritesheet_();
-    var headerHeight = 0 *   canvas.height / 15;
+    var headerHeight = 80;
     var fontSize = Math.floor(headerHeight / 6);
     var imgMargin = Math.floor(fontSize / 2);
 
@@ -292,91 +234,6 @@
       canvas.height * 0.75
     );
     doc.save('piskel.pdf');
-  };
-
-  // Used and overridden in casper integration tests.
-  ns.PdfExportController.prototype.downloadCanvas_ = function(canvas) {
-    // Generate file name
-    var name = this.piskelController.getPiskel().getDescriptor().name;
-    var fileName = name + '.png';
-
-    // Transform to blob and start download.
-    pskl.utils.BlobUtils.canvasToBlob(
-      canvas,
-      function(blob) {
-        pskl.utils.FileUtils.downloadAsFile(blob, fileName);
-      },
-      'image/png',
-      300
-    );
-  };
-
-  ns.PdfExportController.prototype.onPixiDownloadClick_ = function() {
-    var zip = new window.JSZip();
-
-    // Create PNG export.
-    var canvas = this.createPngSpritesheet_();
-    var name = this.piskelController.getPiskel().getDescriptor().name;
-
-    zip.file(
-      name + '.png',
-      pskl.utils.CanvasUtils.getBase64FromCanvas(canvas) + '\n',
-      { base64: true }
-    );
-
-    var width = canvas.width / this.getColumns_();
-    var height = canvas.height / this.getRows_();
-
-    var numFrames = this.piskelController.getFrameCount();
-    var frames = {};
-    for (var i = 0; i < numFrames; i++) {
-      var column = i % this.getColumns_();
-      var row = (i - column) / this.getColumns_();
-      var frame = {
-        frame: { x: width * column, y: height * row, w: width, h: height },
-        rotated: false,
-        trimmed: false,
-        spriteSourceSize: { x: 0, y: 0, w: width, h: height },
-        sourceSize: { w: width, h: height }
-      };
-      frames[name + i + '.png'] = frame;
-    }
-
-    var json = {
-      frames: frames,
-      meta: {
-        app: 'https://github.com/piskelapp/piskel/',
-        version: '1.0',
-        image: name + '.png',
-        format: 'RGBA8888',
-        size: { w: canvas.width, h: canvas.height }
-      }
-    };
-    zip.file(name + '.json', JSON.stringify(json));
-
-    var blob = zip.generate({
-      type: 'blob'
-    });
-
-    pskl.utils.FileUtils.downloadAsFile(blob, name + '.zip');
-  };
-
-  ns.PdfExportController.prototype.onDataUriClick_ = function(evt) {
-    var popup = window.open('about:blank');
-    var dataUri = this.createPngSpritesheet_().toDataURL('image/png');
-    window.setTimeout(
-      function() {
-        var html = pskl.utils.Template.getAndReplace(
-          'data-uri-export-partial',
-          {
-            src: dataUri
-          }
-        );
-        popup.document.title = dataUri;
-        popup.document.body.innerHTML = html;
-      }.bind(this),
-      500
-    );
   };
 
   ns.PdfExportController.prototype.onShowGridChange_ = function(evt) {
