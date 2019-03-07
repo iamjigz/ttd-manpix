@@ -1,6 +1,8 @@
 (function() {
   var ns = $.namespace('pskl.controller.settings.exportimage');
 
+  var PX_TO_CM =  38;
+
   var dimensionInfoPattern =
     '{{width}} x {{height}} px, {{frames}}<br/>{{columns}}, {{rows}}.';
 
@@ -14,117 +16,120 @@
     return count + ' ' + word + 's';
   };
 
-  ns.PngExportController = function(piskelController, exportController) {
+  ns.PdfExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
     this.exportController = exportController;
-    this.onScaleChanged_ = this.onScaleChanged_.bind(this);
-    this.onSizeInputChange_ = this.onSizeInputChange_.bind(this);
   };
 
   pskl.utils.inherit(
-    ns.PngExportController,
+    ns.PdfExportController,
     pskl.controller.settings.AbstractSettingController
   );
 
-  ns.PngExportController.prototype.init = function() {
-    // Initialize zoom controls
-    this.scaleInput = document.querySelector('.export-scale .scale-input');
-    this.addEventListener(this.scaleInput, 'change', this.onScaleChange_);
-    this.addEventListener(this.scaleInput, 'input', this.onScaleChange_);
+  ns.PdfExportController.prototype.init = function() {
+    var downloadButton = document.querySelector('.pdf-download-button');
+    var showGridInput = document.querySelector('input#pdf-show-grid');
 
+    // Initialize zoom controls
     this.widthInput = document.querySelector('.export-resize .resize-width');
     this.heightInput = document.querySelector('.export-resize .resize-height');
-    var scale = pskl.UserSettings.get(pskl.UserSettings.EXPORT_SCALE);
-    this.sizeInputWidget = new pskl.widgets.SizeInput({
-      widthInput : this.widthInput,
-      heightInput : this.heightInput,
-      initWidth : this.piskelController.getWidth() * scale,
-      initHeight : this.piskelController.getHeight() * scale,
-      onChange : this.onSizeInputChange_
-    });
-
-    this.onSizeInputChange_();
-
 
     this.showGrid = true;
+    this.layoutContainer = document.querySelector('.pdf-export-layout-section');
+    this.dimensionInfo = document.querySelector('.pdf-export-dimension-info');
 
-    this.layoutContainer = document.querySelector('.png-export-layout-section');
-    this.dimensionInfo = document.querySelector('.png-export-dimension-info');
+    this.rowsInput = document.querySelector('#pdf-export-rows');
+    this.columnsInput = document.querySelector('#pdf-export-columns');
 
-    this.rowsInput = document.querySelector('#png-export-rows');
-    this.columnsInput = document.querySelector('#png-export-columns');
-
-    var downloadButton = document.querySelector('.png-download-button');
-    var downloadPixiButton = document.querySelector(
-      '.png-pixi-download-button'
-    );
-    var dataUriButton = document.querySelector('.datauri-open-button');
-
-    var showGridInput = document.querySelector('input#png-show-grid');
     showGridInput.checked = this.showGrid;
 
     this.initLayoutSection_();
-    this.updateDimensionLabel_();
 
     this.addEventListener(this.columnsInput, 'input', this.onColumnsInput_);
     this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
-    this.addEventListener(
-      downloadPixiButton,
-      'click',
-      this.onPixiDownloadClick_
-    );
-    this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
-    $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
   };
 
-  ns.PngExportController.prototype.onScaleChange_ = function () {
-    var value = parseFloat(this.scaleInput.value);
+  ns.PdfExportController.prototype.onScaleChange_ = function () {
+    var value = PX_TO_CM;
     if (!isNaN(value)) {
-      if (Math.round(this.getExportZoom()) != value) {
-        this.sizeInputWidget.setWidth(this.piskelController.getWidth() * value);
-      }
       pskl.UserSettings.set(pskl.UserSettings.EXPORT_SCALE, value);
     }
   };
 
-  ns.PngExportController.prototype.destroy = function() {
-    $.unsubscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
+  ns.PngExportController.prototype.onDownloadPDFClick_ = function(evt) {
+    var canvas = this.createPngSpritesheet_();
+    var headerHeight = canvas.height / 15;
+    var fontSize = Math.floor(headerHeight / 6);
+    var imgMargin = Math.floor(fontSize / 2);
+
+    var orientation = canvas.width > canvas.height ? 'l' : 'p';
+    var doc = new jsPDF({
+      orientation: orientation,
+      unit: 'pt',
+      format: [
+        canvas.width * 0.75,
+        canvas.height * 0.75 + (headerHeight + imgMargin * 2)
+      ]
+    });
+
+    //A4 size: [ 841.89, 595.28],
+    var n = orientation == 'l' ? 841.89 : 595.28;
+
+    doc.setFontStyle('bold');
+    doc.setFontSize(fontSize);
+    doc.text(
+      // TODO: Header and PDP must be fetched through ajax
+      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
+      imgMargin * 2.5 + headerHeight,
+      headerHeight / 2,
+      {
+        baseline: 'middle'
+      }
+    );
+
+    var logo = $('#manufacture-du-pixel');
+    doc.addImage(
+      logo[0],
+      'PNG',
+      imgMargin,
+      imgMargin,
+      headerHeight,
+      headerHeight
+    );
+    doc.line(
+      0,
+      imgMargin * 2 + headerHeight,
+      Math.max(canvas.width, n),
+      imgMargin * 2 + headerHeight
+    );
+
+    doc.addImage(
+    canvas.toDataURL('image/png', 1),
+      'PNG',
+      0,
+      imgMargin * 2 + headerHeight,
+      canvas.width * 0.75,
+      canvas.height * 0.75
+    );
+    doc.save('piskel.pdf');
+  };
+
+
+  ns.PdfExportController.prototype.destroy = function() {
     this.superclass.destroy.call(this);
   };
 
-  ns.PngExportController.prototype.getExportZoom = function() {
+  ns.PdfExportController.prototype.getExportZoom = function() {
     return (
       parseInt(this.widthInput.value, 10) / this.piskelController.getWidth()
     );
   };
 
-  ns.PngExportController.prototype.updateScaleText_ = function (scale) {
-    scale = scale.toFixed(1);
-    var scaleText = document.querySelector('.export-scale .scale-text');
-    scaleText.innerHTML = scale + 'x';
-  };
-
-  ns.PngExportController.prototype.onSizeInputChange_ = function () {
-    var zoom = this.getExportZoom();
-    if (isNaN(zoom)) {
-      return;
-    }
-
-    this.updateScaleText_(zoom);
-    $.publish(Events.EXPORT_SCALE_CHANGED);
-
-    this.scaleInput.value = Math.round(zoom);
-    if (zoom >= 1 && zoom <= 128) {
-      this.onScaleChange_();
-    }
-  };
-
-
   /**
    * Initalize all controls related to the spritesheet layout.
    */
-  ns.PngExportController.prototype.initLayoutSection_ = function() {
+  ns.PdfExportController.prototype.initLayoutSection_ = function() {
     var frames = this.piskelController.getFrameCount();
     if (frames === 1) {
       // Hide the layout section if only one frame is defined.
@@ -136,35 +141,15 @@
     }
   };
 
-  ns.PngExportController.prototype.updateDimensionLabel_ = function() {
-    var zoom = this.getExportZoom();
-    var frames = this.piskelController.getFrameCount();
-    var width = this.piskelController.getWidth() * zoom;
-    var height = this.piskelController.getHeight() * zoom;
-
-    var columns = this.getColumns_();
-    var rows = this.getRows_();
-    width = columns * width;
-    height = rows * height;
-
-    this.dimensionInfo.innerHTML = replace(dimensionInfoPattern, {
-      width: width,
-      height: height,
-      rows: pluralize('row', rows),
-      columns: pluralize('column', columns),
-      frames: pluralize('frame', frames)
-    });
-  };
-
-  ns.PngExportController.prototype.getColumns_ = function() {
+  ns.PdfExportController.prototype.getColumns_ = function() {
     return parseInt(this.columnsInput.value || 1, 10);
   };
 
-  ns.PngExportController.prototype.getRows_ = function() {
+  ns.PdfExportController.prototype.getRows_ = function() {
     return parseInt(this.rowsInput.value || 1, 10);
   };
 
-  ns.PngExportController.prototype.getBestFit_ = function() {
+  ns.PdfExportController.prototype.getBestFit_ = function() {
     var ratio =
       this.piskelController.getWidth() / this.piskelController.getHeight();
     var frameCount = this.piskelController.getFrameCount();
@@ -173,15 +158,11 @@
     return pskl.utils.Math.minmax(bestFit, 1, frameCount);
   };
 
-  ns.PngExportController.prototype.onScaleChanged_ = function() {
-    this.updateDimensionLabel_();
-  };
-
   /**
    * Synchronise column and row inputs, called everytime a user input updates one of the
    * two inputs by the SynchronizedInputs widget.
    */
-  ns.PngExportController.prototype.onColumnsInput_ = function() {
+  ns.PdfExportController.prototype.onColumnsInput_ = function() {
     var value = this.columnsInput.value;
     if (value === '') {
       // Skip the synchronization if the input is empty.
@@ -206,10 +187,9 @@
     this.rowsInput.value = Math.ceil(
       this.piskelController.getFrameCount() / value
     );
-    this.updateDimensionLabel_();
   };
 
-  ns.PngExportController.prototype.createPngSpritesheet_ = function() {
+  ns.PdfExportController.prototype.createPngSpritesheet_ = function() {
     var renderer = new pskl.rendering.PiskelRenderer(this.piskelController);
     var outputCanvas = renderer.renderAsCanvas(
       this.getColumns_(),
@@ -218,7 +198,7 @@
     var width = outputCanvas.width;
     var height = outputCanvas.height;
 
-    var zoom = this.getExportZoom();
+    var zoom = PX_TO_CM;
     if (zoom != 1) {
       var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
       var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
@@ -254,14 +234,68 @@
     return outputCanvas;
   };
 
-  ns.PngExportController.prototype.onDownloadClick_ = function(evt) {
-    // Create PNG export.
+  ns.PdfExportController.prototype.onDownloadClick_ = function(evt) {
     var canvas = this.createPngSpritesheet_();
-    this.downloadCanvas_(canvas);
+    var headerHeight = 0 *   canvas.height / 15;
+    var fontSize = Math.floor(headerHeight / 6);
+    var imgMargin = Math.floor(fontSize / 2);
+
+    var frame = this.piskelController.getCurrentFrame();
+
+    var orientation = canvas.width > canvas.height ? 'l' : 'p';
+    var doc = new jsPDF({
+      orientation: orientation,
+      unit: 'pt',
+      format: [
+        canvas.width * 0.75,
+        canvas.height * 0.75 + (headerHeight + imgMargin * 2)
+      ]
+    });
+
+    //A4 size: [ 841.89, 595.28],
+    var n = orientation == 'l' ? 841.89 : 595.28;
+
+    doc.setFontStyle('bold');
+    doc.setFontSize(fontSize);
+    doc.text(
+      // TODO: Header and PDP must be fetched through ajax
+      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
+      imgMargin * 2.5 + headerHeight,
+      headerHeight / 2,
+      {
+        baseline: 'middle'
+      }
+    );
+
+    var logo = $('#manufacture-du-pixel');
+    doc.addImage(
+      logo[0],
+      'PNG',
+      imgMargin,
+      imgMargin,
+      headerHeight,
+      headerHeight
+    );
+    doc.line(
+      0,
+      imgMargin * 2 + headerHeight,
+      Math.max(canvas.width, n),
+      imgMargin * 2 + headerHeight
+    );
+
+    doc.addImage(
+      canvas,
+      'PNG',
+      0,
+      imgMargin * 2 + headerHeight,
+      canvas.width * 0.75,
+      canvas.height * 0.75
+    );
+    doc.save('piskel.pdf');
   };
 
   // Used and overridden in casper integration tests.
-  ns.PngExportController.prototype.downloadCanvas_ = function(canvas) {
+  ns.PdfExportController.prototype.downloadCanvas_ = function(canvas) {
     // Generate file name
     var name = this.piskelController.getPiskel().getDescriptor().name;
     var fileName = name + '.png';
@@ -277,7 +311,7 @@
     );
   };
 
-  ns.PngExportController.prototype.onPixiDownloadClick_ = function() {
+  ns.PdfExportController.prototype.onPixiDownloadClick_ = function() {
     var zip = new window.JSZip();
 
     // Create PNG export.
@@ -327,7 +361,7 @@
     pskl.utils.FileUtils.downloadAsFile(blob, name + '.zip');
   };
 
-  ns.PngExportController.prototype.onDataUriClick_ = function(evt) {
+  ns.PdfExportController.prototype.onDataUriClick_ = function(evt) {
     var popup = window.open('about:blank');
     var dataUri = this.createPngSpritesheet_().toDataURL('image/png');
     window.setTimeout(
@@ -345,7 +379,7 @@
     );
   };
 
-  ns.PngExportController.prototype.onShowGridChange_ = function(evt) {
+  ns.PdfExportController.prototype.onShowGridChange_ = function(evt) {
     this.showGrid = evt.target.checked;
   };
 })();
