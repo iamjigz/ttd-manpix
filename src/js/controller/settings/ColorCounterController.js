@@ -16,7 +16,7 @@
     var counter = {};
     var frame = this.piskelController.getCurrentFrame();
     for (var i = 0; i < frame.pixels.length; i++) {
-      var color = pskl.utils.intToColor(frame.pixels[i]);
+      var color = pskl.utils.ColorUtils.rgbToHex(pskl.utils.intToColor(frame.pixels[i]));
       if (counter[color] == null) {
         counter[color] = 0;
       }
