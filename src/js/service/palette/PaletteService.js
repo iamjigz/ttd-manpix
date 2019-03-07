@@ -28,9 +28,10 @@
       {name: 'flesh', value: [253, 201, 141]},
       {name: 'brown', value: [101,  56,   0]},
   ];
-
+  var colorSet = new Set();
   for (var k in colors) {
     colors[k].value = rgbToHex(colors[k].value);
+    colorSet.add(colors[k].value);
   }
 
   var fixedPalette = {
@@ -63,6 +64,36 @@
     return colors;
   };
 
+  ns.PaletteService.prototype.getColorSet = function () {
+    return colorSet;
+  };
+
+  ns.PaletteService.prototype.getClosestColor = function (color) {
+    if (colorSet.has(color)) {
+      return color;
+    }
+      // strip alpha values
+    var m = color.match(/#\w{6}/);
+    if (!m) {
+      return '#000000';
+    }
+    color = m[0];
+    if (colorSet.has(color)) {
+      return color;
+    }
+    var color_ = color;
+    var minDist = Infinity;
+    var ColorUtils = pskl.utils.ColorUtils;
+    for (var i = 0; i < colors.length; i++) {
+      var c = colors[i].value;
+      var dist = ColorUtils.colorDistance(color, c);
+      if (dist < minDist) {
+        color_ = c;
+        minDist = dist;
+      }
+    }
+    return color_;
+  };
 
   ns.PaletteService.prototype.savePalette = function (palette) {
     var palettes = this.getPalettes();
