@@ -144,9 +144,32 @@
     return steps;
   };
 
+  ns.ImportWizard.prototype.removeUnrecognizedColors = function (pixels) {
+    var knownColors = pskl.app.paletteService.getColorSet();
+    knownColors.add('#00000000');
+    for (var i = 0; i < pixels.length; i++) {
+      var color = pskl.utils.ColorUtils.rgbToHex(pskl.utils.intToColor(pixels[i])).toUpperCase();
+      if (!knownColors.has(color)) {
+        pixels[i] = 0;
+      }
+    }
+  };
+
+  ns.ImportWizard.prototype.replaceWithPaletteColors = function (pixels) {
+    var knownColors = pskl.app.paletteService.getColorSet();
+    knownColors.add('#00000000');
+    for (var i = 0; i < pixels.length; i++) {
+      var color = pskl.utils.ColorUtils.rgbToHex(pskl.utils.intToColor(pixels[i])).toUpperCase();
+      var color_ = pskl.app.paletteService.getClosestColor(color);
+      pixels[i] = pskl.utils.colorToInt(color_);
+    }
+  };
+
   ns.ImportWizard.prototype.finalizeImport_ = function () {
     var piskel = this.mergeData.mergePiskel;
     var mode = this.mergeData.importMode;
+
+    this.replaceWithPaletteColors(piskel.layers[0].frames[0].pixels);
 
     if (mode === ns.steps.SelectMode.MODES.REPLACE) {
       // Replace the current piskel and close the dialog.

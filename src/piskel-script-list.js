@@ -143,6 +143,7 @@
   "js/controller/settings/resize/DefaultSizeController.js",
   "js/controller/settings/SaveController.js",
   "js/controller/settings/ImportController.js",
+  "js/controller/settings/ColorCounterController.js",
 
   // Settings controller
   "js/controller/settings/SettingsController.js",
@@ -246,6 +247,7 @@
   "js/tools/transform/Rotate.js",
   "js/tools/transform/TransformUtils.js",
   "js/tools/settings/Resize.js",
+  "js/tools/settings/Counter.js",
 
   // Devtools
   "js/devtools/DrawingTestPlayer.js",

@@ -1,0 +1,29 @@
+.settings-section-color-counter .color-entry {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.settings-section-color-counter .color-entry > span {
+    margin-left: 5px;
+}
+
+.settings-section-color-counter .color-block {
+    display: inline-block; width: 25px; height: 25px; background-color: #000;
+    border: 1px solid gray;
+}
+
+.settings-section-color-counter .color-name::after {
+    content: ": ";
+}
+
+.settings-section-color-counter .color-count {
+    width: 50px;
+}
+
+.settings-section-color-counter .msg {
+    display: block;
+    font-style: italic;
+    font-size: 13px;
+}
