@@ -1,5 +1,6 @@
 (function() {
   var ns = $.namespace('pskl.controller.settings.exportimage');
+  var UserSettings = pskl.UserSettings;
 
   var PX_TO_CM =  38;
 
@@ -16,12 +17,14 @@
   ns.PdfExportController.prototype.init = function() {
     var downloadButton = document.querySelector('.pdf-download-button');
     var showGridInput = document.querySelector('input#pdf-show-grid');
+    var hideImageInput = document.querySelector('input#pdf-hide-image');
 
     // Initialize zoom controls
     this.widthInput = document.querySelector('.export-resize .resize-width');
     this.heightInput = document.querySelector('.export-resize .resize-height');
 
-    this.showGrid = true;
+    this.showGrid = UserSettings.get(UserSettings.EXPORT_INCLUDE_GRID);
+    this.hideImage = UserSettings.get(UserSettings.EXPORT_HIDE_IMAGE);
     this.layoutContainer = document.querySelector('.pdf-export-layout-section');
     this.dimensionInfo = document.querySelector('.pdf-export-dimension-info');
 
@@ -29,18 +32,20 @@
     this.columnsInput = document.querySelector('#pdf-export-columns');
 
     showGridInput.checked = this.showGrid;
+    hideImageInput.checked = this.hideImage;
 
     this.initLayoutSection_();
 
     this.addEventListener(this.columnsInput, 'input', this.onColumnsInput_);
     this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
+    this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
   };
 
   ns.PdfExportController.prototype.onScaleChange_ = function () {
     var value = PX_TO_CM;
     if (!isNaN(value)) {
-      pskl.UserSettings.set(pskl.UserSettings.EXPORT_SCALE, value);
+      UserSettings.set(UserSettings.EXPORT_SCALE, value);
     }
   };
 
@@ -129,34 +134,21 @@
 
     var zoom = PX_TO_CM;
     if (zoom != 1) {
-      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
-      var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
-      var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
+      var gridWidth = UserSettings.get(UserSettings.GRID_WIDTH);
+      var gridSpacing = UserSettings.get(UserSettings.GRID_SPACING);
+      var gridColor = UserSettings.get(UserSettings.GRID_COLOR);
       outputCanvas = pskl.utils.ImageResizer.resize(
         outputCanvas,
         width * zoom,
         height * zoom,
         false
       );
-
+      if (this.hideImage) {
+        var pixels = this.piskelController.getCurrentFrame().pixels;
+        pskl.utils.CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+      }
       if (this.showGrid) {
-        var ctx = outputCanvas.getContext('2d');
-
-        gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
-        ctx.fillStyle = gridColor;
-        var fillRect = ctx.fillRect.bind(ctx);
-        if (gridColor === Constants.TRANSPARENT_COLOR) {
-          fillRect = ctx.clearRect.bind(ctx);
-        }
-
-        for (var i = 1; i <= height; i++) {
-          var y = i * zoom * gridSpacing;
-          fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
-        }
-        for (var j = 1; j <= width; j++) {
-          var x = j * zoom * gridSpacing;
-          fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
-        }
+        pskl.utils.CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
       }
     }
 
@@ -232,5 +224,10 @@
 
   ns.PdfExportController.prototype.onShowGridChange_ = function(evt) {
     this.showGrid = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_INCLUDE_GRID, this.showGrid);
+  };
+  ns.PdfExportController.prototype.onHideImageChange_ = function(evt) {
+    this.hideImage = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.hideImage);
   };
 })();
