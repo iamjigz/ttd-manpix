@@ -201,7 +201,11 @@
     if (gridColor == Constants.TRANSPARENT_COLOR) {
       gridColor = '#000000';
     }
-    doc.setFillColor(gridColor);
+    try {
+      doc.setFillColor(gridColor);
+    } catch (e) {
+          /* ignore unrecognized colors */
+    }
 
     doc.rect(
       0,
