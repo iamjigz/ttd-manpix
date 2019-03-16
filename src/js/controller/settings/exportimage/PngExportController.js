@@ -242,11 +242,11 @@
 
         for (var i = 1; i <= height; i++) {
           var y = i * zoom * gridSpacing;
-          fillRect(0, y, zoom * width, (gridWidth * zoom) / 32);
+          fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
         }
         for (var j = 1; j <= width; j++) {
           var x = j * zoom * gridSpacing;
-          fillRect(x, 0, (gridWidth * zoom) / 32, zoom * height);
+          fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
         }
       }
     }

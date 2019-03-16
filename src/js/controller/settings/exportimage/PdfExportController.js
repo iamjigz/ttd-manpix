@@ -3,19 +3,6 @@
 
   var PX_TO_CM =  38;
 
-  var dimensionInfoPattern =
-    '{{width}} x {{height}} px, {{frames}}<br/>{{columns}}, {{rows}}.';
-
-  var replace = pskl.utils.Template.replace;
-
-  // Helper to return "X items" or "1 item" if X is 1.
-  var pluralize = function(word, count) {
-    if (count === 1) {
-      return '1 ' + word;
-    }
-    return count + ' ' + word + 's';
-  };
-
   ns.PdfExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
     this.exportController = exportController;
@@ -164,11 +151,11 @@
 
         for (var i = 1; i <= height; i++) {
           var y = i * zoom * gridSpacing;
-          fillRect(0, y, zoom * width, (gridWidth * zoom) / 32);
+          fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
         }
         for (var j = 1; j <= width; j++) {
           var x = j * zoom * gridSpacing;
-          fillRect(x, 0, (gridWidth * zoom) / 32, zoom * height);
+          fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
         }
       }
     }
@@ -181,9 +168,7 @@
     var headerHeight = 80;
     var fontSize = Math.floor(headerHeight / 6);
     var imgMargin = Math.floor(fontSize / 2);
-
     var frame = this.piskelController.getCurrentFrame();
-
     var orientation = canvas.width > canvas.height ? 'l' : 'p';
     var doc = new jsPDF({
       orientation: orientation,
@@ -218,11 +203,20 @@
       headerHeight,
       headerHeight
     );
-    doc.line(
+
+    var lineHeight = (pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH) * 0.75) || 1;
+    var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
+    if (gridColor == Constants.TRANSPARENT_COLOR) {
+      gridColor = '#000000';
+    }
+    doc.setFillColor(gridColor);
+
+    doc.rect(
       0,
-      imgMargin * 2 + headerHeight,
+      imgMargin * 2 + headerHeight - lineHeight,
       Math.max(canvas.width, n),
-      imgMargin * 2 + headerHeight
+      lineHeight,
+      'F'
     );
 
     doc.addImage(
@@ -231,7 +225,7 @@
       0,
       imgMargin * 2 + headerHeight,
       canvas.width * 0.75,
-      canvas.height * 0.75
+        canvas.height * 0.75
     );
     doc.save('piskel.pdf');
   };
