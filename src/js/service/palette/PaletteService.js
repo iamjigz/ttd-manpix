@@ -68,6 +68,18 @@
     return colorSet;
   };
 
+  ns.PaletteService.prototype.getColorIndexMap = function () {
+    var colorValues = colors.map(function(color) {
+      return color.value;
+    });
+    var colorMap = {};
+    for (var i = 0; i < colorValues.length; i++) {
+      var color = colorValues[i];
+      colorMap[pskl.utils.colorToInt(color)] = i;
+    }
+    return colorMap;
+  };
+
   ns.PaletteService.prototype.getClosestColor = function (color) {
     if (colorSet.has(color)) {
       return color;

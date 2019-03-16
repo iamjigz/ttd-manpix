@@ -142,6 +142,56 @@
       format = format || 'png';
       var data = canvas.toDataURL('image/' + format);
       return data.substr(data.indexOf(',') + 1);
+    },
+
+    drawGrid: function(canvas, width, height, zoom) {
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
+      var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
+      var ctx = canvas.getContext('2d');
+
+      gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
+      ctx.fillStyle = gridColor;
+      var fillRect = ctx.fillRect.bind(ctx);
+      if (gridColor === Constants.TRANSPARENT_COLOR) {
+        fillRect = ctx.clearRect.bind(ctx);
+      }
+
+      for (var i = 1; i <= height; i++) {
+        var y = i * zoom * gridSpacing;
+        fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
+      }
+      for (var j = 1; j <= width; j++) {
+        var x = j * zoom * gridSpacing;
+        fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
+      }
+    },
+
+    drawNumberGrid: function(canvas, pixels, width, height, zoom, options) {
+      options = options || {};
+      var color = options.color || '#000000';
+      var backgroundColor = options.backgroundColor || '#FFFFFF';
+      var usePixelColor = options.usePixelColor;
+
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      var colorIndex = pskl.app.paletteService.getColorIndexMap();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'bold ' + Math.floor(zoom / 2) + 'px serif';
+      for (var y = 0; y < height; y++) {
+        for (var x = 0; x < width; x++) {
+          var colorInt = pixels[y * width + x];
+          var index = colorIndex[colorInt];
+          var offset = zoom / 2 + gridWidth / 2;
+          var text = index >= 0 ? index : '';
+          ctx.fillStyle = usePixelColor ? pskl.utils.intToColor(colorInt) : color;
+          ctx.fillText(text, x * zoom + offset, y * zoom + offset);
+        }
+      }
     }
   };
+
 })();
