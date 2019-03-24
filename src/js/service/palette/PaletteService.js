@@ -68,6 +68,12 @@
     return colorSet;
   };
 
+  ns.PaletteService.prototype.getColors = function () {
+    return colors.map(function(color) {
+      return color.value;
+    });
+  };
+
   ns.PaletteService.prototype.getColorIndexMap = function () {
     var colorValues = colors.map(function(color) {
       return color.value;

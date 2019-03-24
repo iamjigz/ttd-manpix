@@ -49,6 +49,7 @@
 
     this.showGrid = UserSettings.get(UserSettings.EXPORT_INCLUDE_GRID);
     this.hideImage = UserSettings.get(UserSettings.EXPORT_HIDE_IMAGE);
+    this.showCellCounter = UserSettings.get(UserSettings.SHOW_CELL_COUNTER);
 
     this.layoutContainer = document.querySelector('.png-export-layout-section');
     this.dimensionInfo = document.querySelector('.png-export-dimension-info');
@@ -63,9 +64,11 @@
     var dataUriButton = document.querySelector('.datauri-open-button');
     var showGridInput = document.querySelector('input#png-show-grid');
     var hideImageInput = document.querySelector('input#png-hide-image');
+    var showCellCounterInput = document.querySelector('input#png-show-cell-counter');
 
     showGridInput.checked = this.showGrid;
     hideImageInput.checked = this.hideImage;
+    showCellCounterInput.checked = this.showCellCounter;
 
     this.initLayoutSection_();
     this.updateDimensionLabel_();
@@ -80,6 +83,7 @@
     this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
+    this.addEventListener(showCellCounterInput, 'change', this.onShowCellCounterChange_);
     $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
   };
 
@@ -233,12 +237,18 @@
         false
       );
 
+      var CanvasUtils = pskl.utils.CanvasUtils;
       if (this.hideImage) {
         var pixels = this.piskelController.getCurrentFrame().pixels;
-        pskl.utils.CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+        CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+      }
+      if (this.showCellCounter) {
+        width += 1;
+        height += 1;
+        outputCanvas = CanvasUtils.drawCounterGuide(outputCanvas, zoom);
       }
       if (this.showGrid) {
-        pskl.utils.CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
+        CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
       }
     }
 
@@ -343,5 +353,9 @@
   ns.PngExportController.prototype.onHideImageChange_ = function(evt) {
     this.hideImage = evt.target.checked;
     UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.hideImage);
+  };
+  ns.PngExportController.prototype.onShowCellCounterChange_ = function(evt) {
+    this.showCellCounter = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.showCellCounter);
   };
 })();

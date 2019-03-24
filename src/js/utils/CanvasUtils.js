@@ -175,12 +175,14 @@
 
       var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
       var ctx = canvas.getContext('2d');
+      var colorIndex = pskl.app.paletteService.getColorIndexMap();
+
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      var colorIndex = pskl.app.paletteService.getColorIndexMap();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = 'bold ' + Math.floor(zoom / 2) + 'px serif';
+      ctx.font = Math.floor(zoom / 3.5) + 'px sans';
+
       for (var y = 0; y < height; y++) {
         for (var x = 0; x < width; x++) {
           var colorInt = pixels[y * width + x];
@@ -191,7 +193,50 @@
           ctx.fillText(text, x * zoom + offset, y * zoom + offset);
         }
       }
-    }
+    },
+
+    drawCounterGuide: function (image, zoom, options) {
+      options = options || {};
+
+      // insert an additional row and column at the beginning
+      var targetWidth = image.width;
+      var targetHeight = image.height;
+      var canvas = pskl.utils.CanvasUtils.createCanvas(targetWidth + zoom, targetHeight + zoom);
+      var context = canvas.getContext('2d', {alpha: false});
+
+      pskl.utils.CanvasUtils.disableImageSmoothing(canvas);
+      context.drawImage(image, zoom, zoom, targetWidth, targetHeight);
+
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var color = options.color || '#000000';
+      var backgroundColor = options.backgroundColor || '#FFFFFF';
+      var fontSize = Math.floor(zoom / 3.5);
+
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+      context.font = 'bold ' + fontSize + 'px sans';
+
+      for (var i = 0; i < Math.max(canvas.width, canvas.height); i++) {
+        var text = (i == 0 ? '◢ ' : i) + '';
+        var fontWidth = context.measureText(text).width;
+        var offsetX = Math.floor(zoom / 2 - Math.floor(fontWidth / 2));
+        var offsetY = gridWidth / 2 + zoom / 2;
+
+        context.fillStyle = backgroundColor;
+        context.fillRect(i * zoom, 0, zoom, zoom);
+        context.fillRect(0, i * zoom, zoom, zoom);
+
+        context.fillStyle = color;
+        if (i < canvas.width) {
+          context.fillText(text, Math.floor(i * zoom + offsetX),  offsetY);
+        }
+        if (i < canvas.height) {
+          context.fillText(text,  offsetX, Math.floor(i * zoom + offsetY));
+        }
+      }
+
+      return canvas;
+    },
   };
 
 })();
