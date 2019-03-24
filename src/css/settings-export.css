@@ -85,7 +85,6 @@
 .export-scale .scale-input {
   margin: 5px;
   vertical-align: middle;
-  width: 140px;
 }
 
 .export-scale .scale-text {
@@ -160,7 +159,8 @@
     vertical-align: middle;
 }
 
-.export-panel-png .png-grid-note {
+.export-panel-png .png-grid-note,
+.export-panel-pdf .pdf-grid-note {
     margin-top: 5px;
     margin-left: 5px;
     display: block;

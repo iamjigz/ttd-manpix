@@ -2,7 +2,10 @@
   var ns = $.namespace('pskl.controller.settings.exportimage');
   var UserSettings = pskl.UserSettings;
 
-  var PX_TO_CM =  38;
+  // scale canvas to avoid blurry text
+  var CANVAS_SCALE = 3.1;
+  var PX_TO_CM =  38 * CANVAS_SCALE;
+  var PX_TO_PT = 0.75 / CANVAS_SCALE;
 
   ns.PdfExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
@@ -18,11 +21,13 @@
     var downloadButton = document.querySelector('.pdf-download-button');
     var showGridInput = document.querySelector('input#pdf-show-grid');
     var hideImageInput = document.querySelector('input#pdf-hide-image');
+    var showCellCounterInput = document.querySelector('input#pdf-show-cell-counter');
 
     // Initialize zoom controls
     this.widthInput = document.querySelector('.export-resize .resize-width');
     this.heightInput = document.querySelector('.export-resize .resize-height');
 
+    this.showCellCounter = UserSettings.get(UserSettings.SHOW_CELL_COUNTER);
     this.showGrid = UserSettings.get(UserSettings.EXPORT_INCLUDE_GRID);
     this.hideImage = UserSettings.get(UserSettings.EXPORT_HIDE_IMAGE);
     this.layoutContainer = document.querySelector('.pdf-export-layout-section');
@@ -33,6 +38,7 @@
 
     showGridInput.checked = this.showGrid;
     hideImageInput.checked = this.hideImage;
+    showCellCounterInput.checked = this.showCellCounter;
 
     this.initLayoutSection_();
 
@@ -40,6 +46,7 @@
     this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
+    this.addEventListener(showCellCounterInput, 'change', this.onShowCellCounterChange_);
   };
 
   ns.PdfExportController.prototype.onScaleChange_ = function () {
@@ -137,18 +144,27 @@
       var gridWidth = UserSettings.get(UserSettings.GRID_WIDTH);
       var gridSpacing = UserSettings.get(UserSettings.GRID_SPACING);
       var gridColor = UserSettings.get(UserSettings.GRID_COLOR);
+
       outputCanvas = pskl.utils.ImageResizer.resize(
         outputCanvas,
         width * zoom,
         height * zoom,
-        false
+          false,
+          zoom
       );
+
+      var CanvasUtils = pskl.utils.CanvasUtils;
       if (this.hideImage) {
         var pixels = this.piskelController.getCurrentFrame().pixels;
-        pskl.utils.CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+        CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+      }
+      if (this.showCellCounter) {
+        width += 1;
+        height += 1;
+        outputCanvas = CanvasUtils.drawCounterGuide(outputCanvas, zoom);
       }
       if (this.showGrid) {
-        pskl.utils.CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
+        CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
       }
     }
 
@@ -157,22 +173,23 @@
 
   ns.PdfExportController.prototype.onDownloadClick_ = function(evt) {
     var canvas = this.createPngSpritesheet_();
-    var headerHeight = 80;
-    var fontSize = Math.floor(headerHeight / 6);
+    var headerHeight = 50;
+    var legendSize = 10;
+    var footerHeight = this.hideImage ? legendSize * 4 : 0;
+    var fontSize = Math.floor(headerHeight / 5);
     var imgMargin = Math.floor(fontSize / 2);
     var frame = this.piskelController.getCurrentFrame();
     var orientation = canvas.width > canvas.height ? 'l' : 'p';
+    var docWidth = orientation == 'l' ? 841.89 : 595.28; // A4 sizes
+
     var doc = new jsPDF({
       orientation: orientation,
       unit: 'pt',
       format: [
-        canvas.width * 0.75,
-        canvas.height * 0.75 + (headerHeight + imgMargin * 2)
+        canvas.width * PX_TO_PT,
+        canvas.height * PX_TO_PT + (headerHeight + imgMargin * 2) + footerHeight
       ]
     });
-
-    //A4 size: [ 841.89, 595.28],
-    var n = orientation == 'l' ? 841.89 : 595.28;
 
     doc.setFontStyle('bold');
     doc.setFontSize(fontSize);
@@ -196,21 +213,24 @@
       headerHeight
     );
 
-    var lineHeight = (pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH) * 0.75) || 1;
+    var gridWidth = UserSettings.get(UserSettings.GRID_WIDTH);
+    var lineHeight = gridWidth;
     var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
     if (gridColor == Constants.TRANSPARENT_COLOR) {
       gridColor = '#000000';
     }
+
     try {
       doc.setFillColor(gridColor);
     } catch (e) {
-          /* ignore unrecognized colors */
+        /* ignore unrecognized colors */
     }
 
+    // line below header
     doc.rect(
       0,
       imgMargin * 2 + headerHeight - lineHeight,
-      Math.max(canvas.width, n),
+      Math.max(canvas.width * PX_TO_PT, docWidth),
       lineHeight,
       'F'
     );
@@ -220,9 +240,49 @@
       'PNG',
       0,
       imgMargin * 2 + headerHeight,
-      canvas.width * 0.75,
-        canvas.height * 0.75
+      canvas.width * PX_TO_PT,
+        canvas.height * PX_TO_PT
     );
+
+
+    var footerY = headerHeight + imgMargin * 2 + +canvas.height * PX_TO_PT;
+    // line above footer
+    doc.rect(
+      0,
+      footerY,
+      Math.max(canvas.width * PX_TO_PT, docWidth),
+      lineHeight,
+      'F'
+    );
+
+    if (this.hideImage) {
+      // draw color legend
+      var colors = pskl.app.paletteService.getColors();
+      var textLength = legendSize * 4;
+      var nextLine = false;
+
+      var i = 0;
+      var n = 0;
+      var w = (legendSize * 2 + textLength) * (colors.length - 1) / 2;
+      var baseX = (canvas.width * PX_TO_PT - w) / 2;
+
+      for (var i in colors) {
+        var color = colors[i];
+        var x = baseX + (legendSize * 2 + textLength) * n;
+        doc.setFillColor(color);
+        doc.setDrawColor('#000000');
+        doc.setFontSize(legendSize);
+        doc.rect(x, footerY + legendSize, legendSize * 2, legendSize, 'FD');
+        doc.text(i + '', x + legendSize * 2.5, footerY + legendSize, {baseline: 'top'});
+        n++;
+        if (n >= colors.length / 2 && !nextLine) {
+          n = 0;
+          footerY += legendSize + legendSize / 2;
+          nextLine = true;
+        }
+      }
+    }
+
     doc.save('piskel.pdf');
   };
 
@@ -233,5 +293,9 @@
   ns.PdfExportController.prototype.onHideImageChange_ = function(evt) {
     this.hideImage = evt.target.checked;
     UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.hideImage);
+  };
+  ns.PdfExportController.prototype.onShowCellCounterChange_ = function(evt) {
+    this.showCellCounter = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.showCellCounter);
   };
 })();
