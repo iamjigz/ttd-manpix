@@ -1,7 +1,7 @@
 (function() {
   var ns = $.namespace('pskl.controller.settings.exportimage');
 
-  var PX_TO_CM =  38;
+  var PX_TO_CM = 38;
 
   ns.PdfExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
@@ -37,13 +37,12 @@
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
   };
 
-  ns.PdfExportController.prototype.onScaleChange_ = function () {
+  ns.PdfExportController.prototype.onScaleChange_ = function() {
     var value = PX_TO_CM;
     if (!isNaN(value)) {
       pskl.UserSettings.set(pskl.UserSettings.EXPORT_SCALE, value);
     }
   };
-
 
   ns.PdfExportController.prototype.destroy = function() {
     this.superclass.destroy.call(this);
@@ -186,7 +185,10 @@
     doc.setFontSize(fontSize);
     doc.text(
       // TODO: Header and PDP must be fetched through ajax
-      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
+      [
+        'www.manufacturedupixel.com',
+        'Pixel art · Loisir créatif · Mosaïque · Fun !'
+      ],
       imgMargin * 2.5 + headerHeight,
       headerHeight / 2,
       {
@@ -204,7 +206,8 @@
       headerHeight
     );
 
-    var lineHeight = (pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH) * 0.75) || 1;
+    var lineHeight =
+      pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH) * 0.75 || 1;
     var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
     if (gridColor == Constants.TRANSPARENT_COLOR) {
       gridColor = '#000000';
@@ -225,7 +228,7 @@
       0,
       imgMargin * 2 + headerHeight,
       canvas.width * 0.75,
-        canvas.height * 0.75
+      canvas.height * 0.75
     );
     doc.save('piskel.pdf');
   };
