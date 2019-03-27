@@ -28,6 +28,15 @@
   pskl.utils.inherit(ns.GridPreferencesController, pskl.controller.settings.AbstractSettingController);
 
   ns.GridPreferencesController.prototype.init = function () {
+    this.backgroundContainer = document.querySelector('.background-picker-wrapper');
+    this.addEventListener(this.backgroundContainer, 'click', this.onBackgroundClick_);
+
+    var background = pskl.UserSettings.get(pskl.UserSettings.CANVAS_BACKGROUND);
+    var selectedBackground = this.backgroundContainer.querySelector('[data-background=' + background + ']');
+    if (selectedBackground) {
+      selectedBackground.classList.add('selected');
+    }
+
     // Grid enabled
     var isEnabled = pskl.UserSettings.get(pskl.UserSettings.GRID_ENABLED);
     var enableGridCheckbox = document.querySelector('.enable-grid-checkbox');
@@ -71,6 +80,20 @@
 
     this.addEventListener(this.gridColorList, 'click', this.onGridColorClicked_.bind(this));
   };
+
+  ns.GridPreferencesController.prototype.onBackgroundClick_ = function (evt) {
+    var target = evt.target;
+    var background = target.dataset.background;
+    if (background) {
+      pskl.UserSettings.set(pskl.UserSettings.CANVAS_BACKGROUND, background);
+      var selected = this.backgroundContainer.querySelector('.selected');
+      if (selected) {
+        selected.classList.remove('selected');
+      }
+      target.classList.add('selected');
+    }
+  };
+
 
   ns.GridPreferencesController.prototype.destroy = function () {
     this.sizePicker.destroy();

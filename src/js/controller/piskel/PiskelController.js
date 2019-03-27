@@ -101,8 +101,8 @@
     });
   };
 
-  ns.PiskelController.prototype.renderFrameAt = function (index, preserveOpacity) {
-    return pskl.utils.LayerUtils.flattenFrameAt(this.getLayers(), index, preserveOpacity);
+  ns.PiskelController.prototype.renderFrameAt = function (index, preserveOpacity, transparentColor) {
+    return pskl.utils.LayerUtils.flattenFrameAt(this.getLayers(), index, preserveOpacity, transparentColor);
   };
 
   ns.PiskelController.prototype.hasFrameAt = function (index) {

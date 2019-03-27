@@ -11,12 +11,12 @@
      * @param zoom {Number} zoom
      * @return {Image}
      */
-    toImage : function (frame, zoom, opacity) {
+    toImage : function (frame, zoom, opacity, transparentColor) {
       zoom = zoom || 1;
       opacity = isNaN(opacity) ? 1 : opacity;
 
       var canvasRenderer = new pskl.rendering.CanvasRenderer(frame, zoom);
-      canvasRenderer.drawTransparentAs(Constants.TRANSPARENT_COLOR);
+      canvasRenderer.drawTransparentAs(transparentColor || Constants.TRANSPARENT_COLOR);
       canvasRenderer.setOpacity(opacity);
       return canvasRenderer.render();
     },

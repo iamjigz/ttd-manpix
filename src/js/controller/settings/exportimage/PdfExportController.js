@@ -130,7 +130,7 @@
   };
 
   ns.PdfExportController.prototype.createPngSpritesheet_ = function() {
-    var renderer = new pskl.rendering.PiskelRenderer(this.piskelController);
+    var renderer = new pskl.rendering.PiskelRenderer(this.piskelController, '#FFFFFF');
     var outputCanvas = renderer.renderAsCanvas(
       this.getColumns_(),
       this.getRows_()

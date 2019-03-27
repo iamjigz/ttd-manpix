@@ -202,7 +202,7 @@
       var targetWidth = image.width;
       var targetHeight = image.height;
       var canvas = pskl.utils.CanvasUtils.createCanvas(targetWidth + zoom, targetHeight + zoom);
-      var context = canvas.getContext('2d', {alpha: false});
+      var context = canvas.getContext('2d');
 
       pskl.utils.CanvasUtils.disableImageSmoothing(canvas);
       context.drawImage(image, zoom, zoom, targetWidth, targetHeight);
