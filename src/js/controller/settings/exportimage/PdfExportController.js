@@ -56,7 +56,6 @@
     }
   };
 
-
   ns.PdfExportController.prototype.destroy = function() {
     this.superclass.destroy.call(this);
   };
@@ -149,8 +148,8 @@
         outputCanvas,
         width * zoom,
         height * zoom,
-          false,
-          zoom
+        false,
+        zoom
       );
 
       var CanvasUtils = pskl.utils.CanvasUtils;
@@ -181,7 +180,6 @@
     var frame = this.piskelController.getCurrentFrame();
     var orientation = canvas.width > canvas.height ? 'l' : 'p';
     var docWidth = orientation == 'l' ? 841.89 : 595.28; // A4 sizes
-
     var doc = new jsPDF({
       orientation: orientation,
       unit: 'pt',
@@ -195,7 +193,10 @@
     doc.setFontSize(fontSize);
     doc.text(
       // TODO: Header and PDP must be fetched through ajax
-      ['manufacturedupixel.com', '00 Avenue AAA BBB CCC, 00000 DDD, France'],
+      [
+        'www.manufacturedupixel.com',
+        'Pixel art · Loisir créatif · Mosaïque · Fun !'
+      ],
       imgMargin * 2.5 + headerHeight,
       headerHeight / 2,
       {
@@ -219,7 +220,6 @@
     if (gridColor == Constants.TRANSPARENT_COLOR) {
       gridColor = '#000000';
     }
-
     try {
       doc.setFillColor(gridColor);
     } catch (e) {

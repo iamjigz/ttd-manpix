@@ -46,7 +46,6 @@
 
     this.onSizeInputChange_();
 
-
     this.showGrid = UserSettings.get(UserSettings.EXPORT_INCLUDE_GRID);
     this.hideImage = UserSettings.get(UserSettings.EXPORT_HIDE_IMAGE);
     this.showCellCounter = UserSettings.get(UserSettings.SHOW_CELL_COUNTER);
@@ -230,6 +229,9 @@
 
     var zoom = this.getExportZoom();
     if (zoom != 1) {
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
+      var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
       outputCanvas = pskl.utils.ImageResizer.resize(
         outputCanvas,
         width * zoom,
