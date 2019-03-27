@@ -142,6 +142,101 @@
       format = format || 'png';
       var data = canvas.toDataURL('image/' + format);
       return data.substr(data.indexOf(',') + 1);
-    }
+    },
+
+    drawGrid: function(canvas, width, height, zoom) {
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var gridSpacing = pskl.UserSettings.get(pskl.UserSettings.GRID_SPACING);
+      var gridColor = pskl.UserSettings.get(pskl.UserSettings.GRID_COLOR);
+      var ctx = canvas.getContext('2d');
+
+      gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
+      ctx.fillStyle = gridColor;
+      var fillRect = ctx.fillRect.bind(ctx);
+      if (gridColor === Constants.TRANSPARENT_COLOR) {
+        fillRect = ctx.clearRect.bind(ctx);
+      }
+
+      for (var i = 1; i <= height; i++) {
+        var y = i * zoom * gridSpacing;
+        fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
+      }
+      for (var j = 1; j <= width; j++) {
+        var x = j * zoom * gridSpacing;
+        fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
+      }
+    },
+
+    drawNumberGrid: function(canvas, pixels, width, height, zoom, options) {
+      options = options || {};
+      var color = options.color || '#000000';
+      var backgroundColor = options.backgroundColor || '#FFFFFF';
+      var usePixelColor = options.usePixelColor;
+
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var ctx = canvas.getContext('2d');
+      var colorIndex = pskl.app.paletteService.getColorIndexMap();
+
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = Math.floor(zoom / 3.5) + 'px sans';
+
+      for (var y = 0; y < height; y++) {
+        for (var x = 0; x < width; x++) {
+          var colorInt = pixels[y * width + x];
+          var index = colorIndex[colorInt];
+          var offset = zoom / 2 + gridWidth / 2;
+          var text = index >= 0 ? index : '';
+          ctx.fillStyle = usePixelColor ? pskl.utils.intToColor(colorInt) : color;
+          ctx.fillText(text, x * zoom + offset, y * zoom + offset);
+        }
+      }
+    },
+
+    drawCounterGuide: function (image, zoom, options) {
+      options = options || {};
+
+      // insert an additional row and column at the beginning
+      var targetWidth = image.width;
+      var targetHeight = image.height;
+      var canvas = pskl.utils.CanvasUtils.createCanvas(targetWidth + zoom, targetHeight + zoom);
+      var context = canvas.getContext('2d', {alpha: false});
+
+      pskl.utils.CanvasUtils.disableImageSmoothing(canvas);
+      context.drawImage(image, zoom, zoom, targetWidth, targetHeight);
+
+      var gridWidth = pskl.UserSettings.get(pskl.UserSettings.GRID_WIDTH);
+      var color = options.color || '#000000';
+      var backgroundColor = options.backgroundColor || '#FFFFFF';
+      var fontSize = Math.floor(zoom / 3.5);
+
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+      context.font = 'bold ' + fontSize + 'px sans';
+
+      for (var i = 0; i < Math.max(canvas.width, canvas.height); i++) {
+        var text = (i == 0 ? '◢ ' : i) + '';
+        var fontWidth = context.measureText(text).width;
+        var offsetX = Math.floor(zoom / 2 - Math.floor(fontWidth / 2));
+        var offsetY = gridWidth / 2 + zoom / 2;
+
+        context.fillStyle = backgroundColor;
+        context.fillRect(i * zoom, 0, zoom, zoom);
+        context.fillRect(0, i * zoom, zoom, zoom);
+
+        context.fillStyle = color;
+        if (i < canvas.width) {
+          context.fillText(text, Math.floor(i * zoom + offsetX),  offsetY);
+        }
+        if (i < canvas.height) {
+          context.fillText(text,  offsetX, Math.floor(i * zoom + offsetY));
+        }
+      }
+
+      return canvas;
+    },
   };
+
 })();

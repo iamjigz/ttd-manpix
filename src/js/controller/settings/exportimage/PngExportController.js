@@ -1,5 +1,6 @@
 (function() {
   var ns = $.namespace('pskl.controller.settings.exportimage');
+  var UserSettings = pskl.UserSettings;
 
   var dimensionInfoPattern =
     '{{width}} x {{height}} px, {{frames}}<br/>{{columns}}, {{rows}}.';
@@ -45,8 +46,9 @@
 
     this.onSizeInputChange_();
 
-
-    this.showGrid = true;
+    this.showGrid = UserSettings.get(UserSettings.EXPORT_INCLUDE_GRID);
+    this.hideImage = UserSettings.get(UserSettings.EXPORT_HIDE_IMAGE);
+    this.showCellCounter = UserSettings.get(UserSettings.SHOW_CELL_COUNTER);
 
     this.layoutContainer = document.querySelector('.png-export-layout-section');
     this.dimensionInfo = document.querySelector('.png-export-dimension-info');
@@ -59,9 +61,13 @@
       '.png-pixi-download-button'
     );
     var dataUriButton = document.querySelector('.datauri-open-button');
-
     var showGridInput = document.querySelector('input#png-show-grid');
+    var hideImageInput = document.querySelector('input#png-hide-image');
+    var showCellCounterInput = document.querySelector('input#png-show-cell-counter');
+
     showGridInput.checked = this.showGrid;
+    hideImageInput.checked = this.hideImage;
+    showCellCounterInput.checked = this.showCellCounter;
 
     this.initLayoutSection_();
     this.updateDimensionLabel_();
@@ -75,6 +81,8 @@
     );
     this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
+    this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
+    this.addEventListener(showCellCounterInput, 'change', this.onShowCellCounterChange_);
     $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
   };
 
@@ -211,6 +219,7 @@
 
   ns.PngExportController.prototype.createPngSpritesheet_ = function() {
     var renderer = new pskl.rendering.PiskelRenderer(this.piskelController);
+
     var outputCanvas = renderer.renderAsCanvas(
       this.getColumns_(),
       this.getRows_()
@@ -230,24 +239,18 @@
         false
       );
 
+      var CanvasUtils = pskl.utils.CanvasUtils;
+      if (this.hideImage) {
+        var pixels = this.piskelController.getCurrentFrame().pixels;
+        CanvasUtils.drawNumberGrid(outputCanvas, pixels, width, height, zoom);
+      }
+      if (this.showCellCounter) {
+        width += 1;
+        height += 1;
+        outputCanvas = CanvasUtils.drawCounterGuide(outputCanvas, zoom);
+      }
       if (this.showGrid) {
-        var ctx = outputCanvas.getContext('2d');
-
-        gridColor = pskl.utils.ColorUtils.hex2Rgb(gridColor);
-        ctx.fillStyle = gridColor;
-        var fillRect = ctx.fillRect.bind(ctx);
-        if (gridColor === Constants.TRANSPARENT_COLOR) {
-          fillRect = ctx.clearRect.bind(ctx);
-        }
-
-        for (var i = 1; i <= height; i++) {
-          var y = i * zoom * gridSpacing;
-          fillRect(0, y, zoom * width, Math.floor((gridWidth * zoom) / 32));
-        }
-        for (var j = 1; j <= width; j++) {
-          var x = j * zoom * gridSpacing;
-          fillRect(x, 0, Math.floor((gridWidth * zoom) / 32), zoom * height);
-        }
+        CanvasUtils.drawGrid(outputCanvas, width, height, zoom);
       }
     }
 
@@ -347,5 +350,14 @@
 
   ns.PngExportController.prototype.onShowGridChange_ = function(evt) {
     this.showGrid = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_INCLUDE_GRID, this.showGrid);
+  };
+  ns.PngExportController.prototype.onHideImageChange_ = function(evt) {
+    this.hideImage = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.hideImage);
+  };
+  ns.PngExportController.prototype.onShowCellCounterChange_ = function(evt) {
+    this.showCellCounter = evt.target.checked;
+    UserSettings.set(UserSettings.EXPORT_HIDE_IMAGE, this.showCellCounter);
   };
 })();
