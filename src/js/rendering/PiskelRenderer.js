@@ -2,10 +2,10 @@
 
   var ns = $.namespace('pskl.rendering');
 
-  ns.PiskelRenderer = function (piskelController) {
+  ns.PiskelRenderer = function (piskelController, transparencyColor) {
     var frames = [];
     for (var i = 0 ; i < piskelController.getFrameCount() ; i++) {
-      frames.push(piskelController.renderFrameAt(i, true));
+      frames.push(piskelController.renderFrameAt(i, true, transparencyColor));
     }
     this.piskelController = piskelController;
     this.frames = frames;

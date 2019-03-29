@@ -67,20 +67,20 @@
       return mergedFrame;
     },
 
-    renderFrameAt : function (layer, index, preserveOpacity) {
+    renderFrameAt : function (layer, index, preserveOpacity, transparentColor) {
       var opacity = preserveOpacity ? layer.getOpacity() : 1;
       var frame = layer.getFrameAt(index);
-      return pskl.utils.FrameUtils.toImage(frame, 1, opacity);
+      return pskl.utils.FrameUtils.toImage(frame, 1, opacity, transparentColor);
     },
 
-    flattenFrameAt : function (layers, index, preserveOpacity) {
+    flattenFrameAt : function (layers, index, preserveOpacity, transparentColor) {
       var width = layers[0].getFrameAt(index).getWidth();
       var height = layers[0].getFrameAt(index).getHeight();
       var canvas = pskl.utils.CanvasUtils.createCanvas(width, height);
 
       var context = canvas.getContext('2d');
       layers.forEach(function (l) {
-        var render = ns.LayerUtils.renderFrameAt(l, index, preserveOpacity);
+        var render = ns.LayerUtils.renderFrameAt(l, index, preserveOpacity, transparentColor);
         context.drawImage(render, 0, 0, width, height, 0, 0, width, height);
       });
 
