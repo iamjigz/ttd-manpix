@@ -81,7 +81,9 @@
     var colorMap = {};
     for (var i = 0; i < colorValues.length; i++) {
       var color = colorValues[i];
-      colorMap[pskl.utils.colorToInt(color)] = i;
+      if (color != Constants.TRANSPARENT_COLOR) {
+        colorMap[pskl.utils.colorToInt(color)] = i;
+      }
     }
     return colorMap;
   };

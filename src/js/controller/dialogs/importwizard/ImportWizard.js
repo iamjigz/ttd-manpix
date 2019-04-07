@@ -85,21 +85,18 @@
         this.mergeData.importMode = ns.steps.SelectMode.MODES.REPLACE;
         this.finalizeImport_();
       } else {
-        this.wizard.goTo('SELECT_MODE');
-      }
-    } else if (step.name === 'SELECT_MODE') {
-      if (this.mergeData.importMode === ns.steps.SelectMode.MODES.REPLACE) {
-        this.finalizeImport_();
-      } else if (this.hasSameSize_()) {
-        this.wizard.goTo('INSERT_LOCATION');
-      } else {
-        this.wizard.goTo('ADJUST_SIZE');
+        this.mergeData.importMode = ns.steps.SelectMode.MODES.MERGE;
+
+        if (this.hasSameSize_()) {
+          this.finalizeImport_();
+        } else {
+          this.wizard.goTo('ADJUST_SIZE');
+        }
       }
     } else if (step.name === 'ADJUST_SIZE') {
-      this.wizard.goTo('INSERT_LOCATION');
-    } else if (step.name === 'INSERT_LOCATION') {
       this.finalizeImport_();
     }
+    console.log(this.wizard.getCurrentStep());
   };
 
   ns.ImportWizard.prototype.destroy = function (file) {
@@ -178,18 +175,15 @@
         this.closeDialog();
       }
     } else if (mode === ns.steps.SelectMode.MODES.MERGE) {
+      console.log(this.mergeData);
       var merge = pskl.utils.MergeUtils.merge(this.piskelController.getPiskel(), piskel, {
-        insertIndex: this.mergeData.insertIndex,
-        insertMode: this.mergeData.insertMode,
+        insertIndex: 1,
+        insertMode: 'insert',
         origin: this.mergeData.origin,
         resize: this.mergeData.resize
       });
       this.piskelController.setPiskel(merge);
-
-      // Set the first imported layer as selected.
-      var importedLayers = piskel.getLayers().length;
-      var currentLayers = this.piskelController.getLayers().length;
-      this.piskelController.setCurrentLayerIndex(currentLayers - importedLayers);
+      this.piskelController.mergeDownLayerAt(1);
 
       this.closeDialog();
     }
