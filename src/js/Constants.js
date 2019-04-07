@@ -24,6 +24,9 @@ var Constants = {
   TRANSPARENT_COLOR: 'rgba(0, 0, 0, 0)',
   SEAMLESS_MODE_OVERLAY_COLOR: 'rgba(255, 255, 255, 0)',
 
+  // eslint-disable-next-line max-len
+  TRANSPARENT_IMAGE_URL: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEW6urr///82MBGFAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=)',
+
   CURRENT_COLORS_PALETTE_ID: '__current-colors',
 
   /*

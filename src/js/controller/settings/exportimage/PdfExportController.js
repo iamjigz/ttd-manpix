@@ -268,6 +268,9 @@
 
       for (var i in colors) {
         var color = colors[i];
+        if (color == Constants.TRANSPARENT_COLOR) {
+          color = '#FFFFFF';
+        }
         var x = baseX + (legendSize * 2 + textLength) * n;
         doc.setFillColor(color);
         doc.setDrawColor('#000000');

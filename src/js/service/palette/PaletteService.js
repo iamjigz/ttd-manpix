@@ -27,10 +27,15 @@
       {name: 'red orange', value: [249,  33,  52]},
       {name: 'flesh', value: [253, 201, 141]},
       {name: 'brown', value: [101,  56,   0]},
+      {name: 'clear', value: [0, 0, 0, 0]},
   ];
   var colorSet = new Set();
   for (var k in colors) {
-    colors[k].value = rgbToHex(colors[k].value);
+    var color = rgbToHex(colors[k].value);
+    if (color === '#00000000') {
+      color = Constants.TRANSPARENT_COLOR;
+    }
+    colors[k].value = color;
     colorSet.add(colors[k].value);
   }
 
@@ -81,7 +86,9 @@
     var colorMap = {};
     for (var i = 0; i < colorValues.length; i++) {
       var color = colorValues[i];
-      colorMap[pskl.utils.colorToInt(color)] = i;
+      if (color != Constants.TRANSPARENT_COLOR) {
+        colorMap[pskl.utils.colorToInt(color)] = i;
+      }
     }
     return colorMap;
   };
