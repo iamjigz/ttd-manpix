@@ -170,19 +170,20 @@
 .canvas.layers-above-canvas  {z-index:  11;}
 
 #tool-section {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 @media (max-width: 999px) {
     .palettes-list-container {
         margin-right: 4px;
+        max-width: 88px !important;
     }
     #tool-section {
-        max-width: 105px;
+        max-width: 115px;
         padding-bottom: 20px;
     }
     .column-wrapper {
-        left: 105px;
+        left: 115px;
     }
     .cursor-coordinates {
       margin-top: 15px;
