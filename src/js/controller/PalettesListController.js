@@ -58,7 +58,8 @@
         return !!color;
       }).map(function (color, index) {
         return pskl.utils.Template.replace(this.paletteColorTemplate_, {
-          color : color,
+          color: color,
+          background: color != Constants.TRANSPARENT_COLOR ? color : Constants.TRANSPARENT_IMAGE_URL,
           index : index + 1,
           title : color.toUpperCase()
         });
