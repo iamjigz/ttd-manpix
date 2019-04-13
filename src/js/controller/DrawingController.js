@@ -85,12 +85,13 @@
       this.container.on('wheel', $.proxy(this.onMousewheel_, this));
     }
 
-    window.addEventListener('mouseup', this.onMouseup_.bind(this));
-    window.addEventListener('mousemove', this.onMousemove_.bind(this));
+    var container = this.container[0];
+    container.addEventListener('mouseup', this.onMouseup_.bind(this));
+    container.addEventListener('mousemove', this.onMousemove_.bind(this));
+    container.addEventListener('touchstart', this.onTouchstart_.bind(this));
+    container.addEventListener('touchmove' , this.onTouchmove_.bind(this));
+    container.addEventListener('touchend', this.onTouchend_.bind(this));
     window.addEventListener('keyup', this.onKeyup_.bind(this));
-    window.addEventListener('touchstart', this.onTouchstart_.bind(this));
-    window.addEventListener('touchmove' , this.onTouchmove_.bind(this));
-    window.addEventListener('touchend', this.onTouchend_.bind(this));
 
     // Deactivate right click:
     body.contextmenu(this.onCanvasContextMenu_);
