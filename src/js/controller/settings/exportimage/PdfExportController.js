@@ -173,7 +173,7 @@
   ns.PdfExportController.prototype.onDownloadClick_ = function(evt) {
     var canvas = this.createPngSpritesheet_();
     var headerHeight = 50;
-    var legendSize = 10;
+    var legendSize = 8;
     var footerHeight = this.hideImage ? legendSize * 4 : 0;
     var fontSize = Math.floor(headerHeight / 5);
     var imgMargin = Math.floor(fontSize / 2);
@@ -263,7 +263,7 @@
 
       var i = 0;
       var n = 0;
-      var w = (legendSize * 2 + textLength) * (colors.length - 1) / 2;
+      var w = (legendSize / 5.0 + textLength) * (colors.length - 1) / 2;
       var baseX = (canvas.width * PX_TO_PT - w) / 2;
 
       for (var i in colors) {
@@ -271,7 +271,7 @@
         if (color == Constants.TRANSPARENT_COLOR) {
           color = '#FFFFFF';
         }
-        var x = baseX + (legendSize * 2 + textLength) * n;
+        var x = baseX + (legendSize / 5.0 + textLength) * n;
         doc.setFillColor(color);
         doc.setDrawColor('#000000');
         doc.setFontSize(legendSize);
