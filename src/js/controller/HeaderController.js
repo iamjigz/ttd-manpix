@@ -1,5 +1,5 @@
 (function() {
-  var ns = $.namespace("pskl.controller");
+  var ns = $.namespace('pskl.controller');
 
   /**
    * When embedded in piskelapp.com, the page adds a header containing the name of the currently edited sprite
