@@ -2,12 +2,14 @@
 
 (typeof exports != "undefined" ? exports : pskl_exports).scripts = [
   // Core libraries
+  "js/lib/URLSearchParams-polyfill.js",
   "js/lib/jquery-1.8.0.js",
   "js/lib/jquery-ui-1.10.3.custom.js",
   "js/lib/pubsub.js",
   "js/lib/bootstrap/bootstrap.js",
   "js/lib/change-dpi.js",
   "js/lib/jspdf.min.js",
+  "js/lib/axios.min.js",
 
   // Application wide configuration
   "js/Constants.js",
