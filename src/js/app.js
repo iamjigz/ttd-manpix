@@ -8,6 +8,7 @@
    * Main application controller
    */
   ns.app = {
+    currentUser: null,
 
     init : function () {
       // Run preferences migration scripts for version v0.12.0
@@ -185,7 +186,7 @@
 
       // TODO: check if sprite_id exists or can be edited
       $.get(
-        "config.json",
+        'config.json',
         function(data) {
           var api = window.Api;
           api.serverURL = data.serverURL || api.serverURL;
@@ -194,7 +195,7 @@
           this.connectServer();
         }.bind(this)
       ).fail(function(message) {
-        alert("Failed to load config.json: check syntax");
+        alert('Failed to load config.json: check syntax');
       });
 
       if (pskl.devtools) {
@@ -259,7 +260,7 @@
         }
         },
         function(error) {
-          console.log("failed to load piskel: ", error);
+          console.log('failed to load piskel: ', error);
         }
       );
     },
@@ -268,9 +269,8 @@
       return pskl.appEnginePiskelData_;
     },
 
-    isLoggedIn : function () {
-      var piskelData = this.getPiskelInitData_();
-      return piskelData && piskelData.isLoggedIn;
+    isLoggedIn: function() {
+      return this.currentUser != null;
     },
 
     initTooltips_ : function () {
