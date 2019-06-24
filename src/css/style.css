@@ -94,3 +94,43 @@ body {
   display: inline-block;
   line-height: 10px;
 }
+
+.signin-container .user-button {
+  min-width: 150px
+}
+
+.signin-popup {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  position: absolute;
+  right: 15px;
+  width: 250px;
+}
+.signin-popup input{
+  width: 98%;
+  display: block;
+  border-radius: 3px;
+  margin-bottom: 4px;
+  padding: 3px;
+}
+
+.signin-popup .panel {
+  text-align: right;
+}
+
+.signin-popup .error {
+  font-size: 12px;
+  color: red;
+  height: 22px;
+  text-align: right;
+}
+
+.signin-popup .other-action {
+  font-size: 12px;
+  margin-right: 10px;
+}
+.signin-popup .other-action:hover {
+  cursor: pointer;
+  color: gold;
+}

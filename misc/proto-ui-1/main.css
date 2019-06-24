@@ -360,3 +360,5 @@ body {
 	border-right: none;
 	border-bottom: none;
 }
+
+.hidden { display: none }
