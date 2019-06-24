@@ -183,10 +183,19 @@
 
       this.initTooltips_();
 
-      var piskelData = this.getPiskelInitData_();
-      if (piskelData && piskelData.piskel) {
-        this.loadPiskel_(piskelData);
-      }
+      // TODO: check if sprite_id exists or can be edited
+      $.get(
+        "config.json",
+        function(data) {
+          var api = window.Api;
+          api.serverURL = data.serverURL || api.serverURL;
+          api.basePath = data.basePath || api.basePath;
+          api.pathSuffix = data.pathSuffix || api.pathSuffix;
+          this.connectServer();
+        }.bind(this)
+      ).fail(function(message) {
+        alert("Failed to load config.json: check syntax");
+      });
 
       if (pskl.devtools) {
         pskl.devtools.init();
@@ -206,21 +215,53 @@
       }
 
       if (pskl.utils.Environment.isDebug()) {
-        pskl.app.shortcutService.registerShortcut(pskl.service.keyboard.Shortcuts.DEBUG.RELOAD_STYLES,
-          window.reloadStyles);
+
+    connectServer: function() {
+      var axios = window.axios;
+      var api = window.Api;
+      var params = api.getCustomURLParams();
+      axios.defaults.withCredentials = true;
+
+      var self = this;
+      api.verify().then(function(resp) {
+        api.connected = resp.data.okay;
+        if (!api.connected) {
+          return;
+        }
+        api.auth().then(function(resp) {
+          if (resp.data.success) {
+            self.currentUser = resp.data;
+            $.publish(Events.SERVER_CONNECT, [resp.data]);
+          } else {
+            self.currentUser = null;
+          }
+        });
+        if (params.sprite_id) {
+          api.getSprite(params.sprite_id).then(function(resp) {
+            var sprite = resp.data.sprite;
+            if (sprite) {
+              self.loadPiskel_(sprite.data);
+            }
+          });
       }
+      });
     },
 
-    loadPiskel_ : function (piskelData) {
-      var serializedPiskel = piskelData.piskel;
-      pskl.utils.serialization.Deserializer.deserialize(serializedPiskel, function (piskel) {
+    loadPiskel_: function(piskelData) {
+      pskl.utils.PiskelFileUtils.decodePiskelFile(
+        piskelData,
+        function(piskel) {
         pskl.app.piskelController.setPiskel(piskel);
         $.publish(Events.PISKEL_SAVED);
         if (piskelData.descriptor) {
           // Backward compatibility for v2 or older
           piskel.setDescriptor(piskelData.descriptor);
         }
-      });
+        },
+        function(error) {
+          console.log("failed to load piskel: ", error);
+        }
+      );
     },
 
     getPiskelInitData_ : function () {

@@ -39,9 +39,18 @@
       deferred.reject(this.getErrorMessage_(response));
     };
 
-    pskl.utils.Xhr.post(Constants.APPENGINE_SAVE_URL, data, successCallback, errorCallback.bind(this));
-
-    return deferred.promise;
+    return window.Api.createOrUpdate(
+      descriptor.name,
+      descriptor.description,
+      descriptor.isPublic,
+      data.framesheet
+    ).then(function(resp) {
+      var api = window.Api;
+      var params = api.getCustomURLParams();
+      if (!params.sprite_id) {
+        location.hash = '#!sprite_id=' + resp.data.id;
+      }
+    });
   };
 
   ns.GalleryStorageService.prototype.getErrorMessage_ = function (response) {
