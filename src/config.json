@@ -1,0 +1,8 @@
+{
+    "__NOTE__" : "avoid trailing /",
+    "serverURL": "http://localhost:9000",
+    "basePath" : "/piskel/api",
+    "pathSuffix" : ".php",
+
+    "galleryPath" : "/piskel/gallery"
+}

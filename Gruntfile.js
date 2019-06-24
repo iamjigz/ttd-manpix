@@ -264,6 +264,7 @@ module.exports = function(grunt) {
           // dest/js/piskel-packaged-min.js should have been created by the uglify task
           { src: ['dest/tmp/js/piskel-packaged-min.js'], dest: 'dest/prod/js/piskel-packaged-min' + version + '.js' },
           { src: ['dest/tmp/index.html'], dest: 'dest/prod/index.html' },
+          { src: ['src/config.json'], dest: 'dest/prod/config.json' },
           { src: ['src/logo.png'], dest: 'dest/prod/logo.png' },
           { src: ['src/js/lib/gif/gif.ie.worker.js'], dest: 'dest/prod/js/lib/gif/gif.ie.worker.js' },
           { expand: true, src: ['img/**'], cwd: 'src/', dest: 'dest/prod/', filter: 'isFile' },
@@ -274,6 +275,7 @@ module.exports = function(grunt) {
         files: [
           // in dev copy everything to dest/dev
           { src: ['dest/tmp/index.html'], dest: 'dest/dev/index.html' },
+          { src: ['src/config.json'], dest: 'dest/dev/config.json' },
           { src: ['src/piskel-script-list.js'], dest: 'dest/dev/piskel-script-list.js' },
           { src: ['src/piskel-style-list.js'], dest: 'dest/dev/piskel-style-list.js' },
           { expand: true, src: ['js/**'], cwd: 'src/', dest: 'dest/dev/', filter: 'isFile' },
