@@ -31,7 +31,8 @@
     this.formError = document.querySelector('.signin-popup .error');
     this.otherAction = document.querySelector('.signin-popup .other-action');
 
-    this.createSpriteButton.href = location.origin + location.pathname + location.search;
+    this.createSpriteButton.href =
+      location.origin + location.pathname + location.search;
 
     this.updateSigninContainer_();
 
@@ -66,7 +67,6 @@
       this
     );
 
-
     $.subscribe(
       Events.BEFORE_SAVING_PISKEL,
       this.onBeforeSavingPiskelEvent_.bind(this)
@@ -90,7 +90,6 @@
   };
 
   ns.HeaderController.prototype.updateSigninContainer_ = function() {
-    console.log('HUH', this.user);
     if (this.user) {
       this.userButton.textContent = this.user.username;
       this.userButton.href = '/todo';
@@ -183,9 +182,7 @@
     this.password2Input.value = '';
   };
 
-  ns.HeaderController.prototype.onCreateSprite = function(e) {
-
-  };
+  ns.HeaderController.prototype.onCreateSprite = function(e) {};
 
   ns.HeaderController.prototype.onSignin = function(e) {
     e.preventDefault();
@@ -196,46 +193,57 @@
     var self = this;
     if (self.usernameInput.value.trim() == '') {
       self.formError.textContent = 'username is required';
+      return;
     } else if (self.passwordInput.value.trim() == '') {
       self.formError.textContent = 'password is required';
+      return;
     }
     if (self.actionName.textContent == 'login') {
-      api
-        .login(self.usernameInput.value.trim(), self.passwordInput.value.trim())
-        .then(function(resp) {
-          var data = resp.data;
-          if (data.error) {
-            self.formError.textContent = data.error;
-            return;
-          }
-          self.user = data;
-          self.updateSigninContainer_();
-          self.togglePopup_();
-          self.clearInput();
-          pskl.app.currentUser = data;
+      var p = !pskl.app.onLogin ?
+        api.login(
+            self.usernameInput.value.trim(),
+            self.passwordInput.value.trim()
+          ) :
+        new Promise(function(resolve, reject) {
+          pskl.app.onLogin(
+              self.usernameInput.value.trim(),
+              self.passwordInput.value.trim(),
+              function(resp) {
+                resolve({ data: resp });
+              }
+            );
         });
     } else {
       if (self.passwordInput.value.trim() != self.password2Input.value.trim()) {
         self.formError.textContent = 'password does not match';
-      } else {
-        api
-          .register(
+        return;
+      }
+      var p = !pskl.app.onRegister ?
+        api.register(
             self.usernameInput.value.trim(),
             self.passwordInput.value.trim()
-          )
-          .then(function(resp) {
-            var data = resp.data;
-            if (data.error) {
-              self.formError.textContent = data.error;
-              return;
-            }
-            self.user = data;
-            self.updateSigninContainer_();
-            self.togglePopup_();
-            self.clearInput();
-            pskl.app.currentUser = data;
-          });
-      }
+          ) :
+        new Promise(function(resolve, reject) {
+          pskl.app.onRegister(
+              self.usernameInput.value.trim(),
+              self.passwordInput.value.trim(),
+              function(resp) {
+                resolve({ data: resp });
+              }
+            );
+        });
     }
+    p.then(function(resp) {
+      var data = resp.data;
+      if (data.error) {
+        self.formError.textContent = data.error;
+        return;
+      }
+      self.user = data;
+      self.updateSigninContainer_();
+      self.togglePopup_();
+      self.clearInput();
+      pskl.app.currentUser = data;
+    });
   };
 })();

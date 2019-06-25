@@ -237,6 +237,13 @@
 
       this.initTooltips_();
 
+      $.ajaxSetup({
+        xhrFields: {
+          withCredentials: true
+        },
+        crossDomain: true
+      });
+
       // TODO: check if sprite_id exists or can be edited
       $.get(
         'config.json',
@@ -245,6 +252,10 @@
           api.serverURL = data.serverURL || api.serverURL;
           api.basePath = data.basePath || api.basePath;
           api.pathSuffix = data.pathSuffix || api.pathSuffix;
+
+          if (window.loadPiskelPlugin) {
+            window.loadPiskelPlugin();
+          }
           this.connectServer();
         }.bind(this)
       ).fail(function(message) {
@@ -294,7 +305,16 @@
         if (!api.connected) {
           return;
         }
-        api.auth().then(function(resp) {
+
+        var authPromise = !pskl.app.onGetLoggedInUser ?
+          api.auth() :
+          new Promise(function(resolve, reject) {
+            pskl.app.onGetLoggedInUser(function(resp) {
+              resolve({ data: resp });
+            });
+          });
+
+        authPromise.then(function(resp) {
           if (resp.data.success) {
             self.currentUser = resp.data;
             $.publish(Events.SERVER_CONNECT, [resp.data]);
@@ -302,18 +322,27 @@
             self.currentUser = null;
           }
         });
+
         if (params.sprite_id) {
-          api.getSprite(params.sprite_id).then(function(resp) {
+          var promise = !pskl.app.onFetchSprite ?
+          api.getSprite(params.sprite_id) :
+          new Promise(function(resolve, reject) {
+            pskl.app.onFetchSprite(params.sprite_id, function(resp) {
+              resolve({ data: resp });
+            });
+          });
+
+          promise.then(function(resp) {
             var sprite = resp.data.sprite;
             if (sprite) {
-              self.loadPiskel_(sprite.data);
+              self.loadPiskel(sprite.data);
             }
           });
         }
       });
     },
 
-    loadPiskel_: function(piskelData) {
+    loadPiskel: function(piskelData, onSuccess, onError) {
       pskl.utils.PiskelFileUtils.decodePiskelFile(
         piskelData,
         function(piskel) {
@@ -323,10 +352,14 @@
             // Backward compatibility for v2 or older
             piskel.setDescriptor(piskelData.descriptor);
           }
+          if (onSuccess) {
+            onSuccess();
+          }
         },
-        function(error) {
-          console.log('failed to load piskel: ', error);
-        }
+        onError ||
+          function(error) {
+            console.log('failed to load piskel: ', error);
+          }
       );
     },
 

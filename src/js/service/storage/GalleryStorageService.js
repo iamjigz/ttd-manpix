@@ -41,14 +41,45 @@
       deferred.reject(this.getErrorMessage_(response));
     };
 
-    return window.Api.createOrUpdate(
-      descriptor.name,
-      descriptor.description,
-      descriptor.isPublic,
-      data.framesheet
-    ).then(function(resp) {
-      var api = window.Api;
-      var params = api.getCustomURLParams();
+    var api = window.Api;
+    var params = api.getCustomURLParams();
+
+    var promise;
+    if (params.sprite_id == null && pskl.app.onSave) {
+      promise = new Promise(function(resolve) {
+        pskl.app.onSave(
+          descriptor.name,
+          descriptor.description,
+          descriptor.isPublic,
+          data.framesheet,
+          function(resp) {
+            resolve({ data: resp });
+          }
+        );
+      });
+    } else if (params.sprite_id != null && pskl.app.onUpdate) {
+      promise = new Promise(function(resolve) {
+        pskl.app.onUpdate(
+          params.sprite_id,
+          descriptor.name,
+          descriptor.description,
+          descriptor.isPublic,
+          data.framesheet,
+          function(resp) {
+            resolve({ data: resp });
+          }
+        );
+      });
+    } else {
+      promise = window.Api.createOrUpdate(
+        descriptor.name,
+        descriptor.description,
+        descriptor.isPublic,
+        data.framesheet
+      );
+    }
+
+    return promise.then(function(resp) {
       if (!params.sprite_id) {
         location.hash = '#!sprite_id=' + resp.data.id;
       }
