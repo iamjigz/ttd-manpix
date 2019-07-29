@@ -4,13 +4,13 @@ var Api = {
   pathSuffix: '.php',
 
   getCustomURLParams: function() {
-    var hash = location.hash;
-    if (!hash || hash.slice(0, 2) != '#!') {
+    var queryString = window.location.search;
+    if (!queryString) {
       return {};
     }
     var params = {};
-    hash
-      .slice(2)
+    queryString
+      .slice(1)
       .split('&')
       .forEach(function(defs) {
         var fields = defs.split('=');
