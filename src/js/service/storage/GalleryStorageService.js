@@ -79,11 +79,7 @@
       );
     }
 
-    return promise.then(function(resp) {
-      if (!params.sprite_id) {
-        location.hash = '#!sprite_id=' + resp.data.id;
-      }
-    });
+    return promise;
   };
 
   ns.GalleryStorageService.prototype.getErrorMessage_ = function(response) {
