@@ -90,6 +90,9 @@
   };
 
   ns.HeaderController.prototype.updateSigninContainer_ = function() {
+    if (!this.userButton) {
+      return;
+    }
     if (this.user) {
       this.userButton.textContent = this.user.username;
       this.userButton.href = '/todo';
