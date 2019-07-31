@@ -7,7 +7,25 @@
 		<meta name="description" content="" />
 		<meta name="author" content="Julian Descottes" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script src="plugin.js"></script>
+        <link rel="stylesheet" href="css/plugin.css">
+		<script src="js/plugin.js"></script>
+		<script>
+			if (window.injectScripts) {
+				function loadStyle(src) {
+					var link = document.createElement('link');
+					link.setAttribute('href', src);
+					link.setAttribute('rel', 'stylesheet');
+					link.setAttribute('type', 'text/css');
+					document.head.appendChild(link);
+				}
+				function loadScript(src) {
+					var script = document.createElement("script");
+					script.src = src;
+					document.head.appendChild(script);
+				}
+				window.injectScripts(loadScript, loadStyle);
+			}
+		</script>
 	</head>
 	<body>
 		<div
@@ -89,6 +107,7 @@
 		@@include('templates/dialogs/import.html', {})
 		@@include('templates/dialogs/performance-info.html', {})
 		@@include('templates/dialogs/unsupported-browser.html', {})
+		@@include('templates/dialogs/popup.html', {})
 
 		<!-- settings-panel partials -->
 		@@include('templates/settings/preferences.html', {})

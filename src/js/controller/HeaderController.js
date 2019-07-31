@@ -110,7 +110,7 @@
     try {
       var name = this.piskelController.getPiskel().getDescriptor().name;
       if (this.savedStatusService.isDirty()) {
-        name = name + ' foo*';
+        name = name + ' *';
       }
 
       if (this.piskelName_) {

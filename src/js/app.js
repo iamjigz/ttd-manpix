@@ -300,31 +300,26 @@
       axios.defaults.withCredentials = true;
 
       var self = this;
-      api.verify().then(function(resp) {
-        api.connected = resp.data.okay;
-        if (!api.connected) {
-          return;
-        }
 
-        var authPromise = !pskl.app.onGetLoggedInUser ?
-          api.auth() :
-          new Promise(function(resolve, reject) {
-            pskl.app.onGetLoggedInUser(function(resp) {
-              resolve({ data: resp });
-            });
+      var authPromise = !pskl.app.onGetLoggedInUser ?
+        api.auth() :
+        new Promise(function(resolve, reject) {
+          pskl.app.onGetLoggedInUser(function(resp) {
+            resolve({ data: resp });
           });
-
-        authPromise.then(function(resp) {
-          if (resp.data.success) {
-            self.currentUser = resp.data;
-            $.publish(Events.SERVER_CONNECT, [resp.data]);
-          } else {
-            self.currentUser = null;
-          }
         });
 
-        if (params.sprite_id) {
-          var promise = !pskl.app.onFetchSprite ?
+      authPromise.then(function(resp) {
+        if (resp.data.success) {
+          self.currentUser = resp.data;
+          $.publish(Events.SERVER_CONNECT, [resp.data]);
+        } else {
+          self.currentUser = null;
+        }
+      });
+
+      if (params.sprite_id) {
+        var promise = !pskl.app.onFetchSprite ?
           api.getSprite(params.sprite_id) :
           new Promise(function(resolve, reject) {
             pskl.app.onFetchSprite(params.sprite_id, function(resp) {
@@ -332,14 +327,67 @@
             });
           });
 
-          promise.then(function(resp) {
-            var sprite = resp.data.sprite;
-            if (sprite) {
-              self.loadPiskel(sprite.data);
-            }
-          });
+        promise.then(function(resp) {
+          var sprite = resp.data.sprite;
+          if (sprite) {
+            self.loadPiskel(sprite.data);
+          }
+        });
+      }
+    },
+
+    getHeaderNav: function(html) {
+      return document.querySelector('.fake-piskelapp-header .button-group');
+    },
+
+    setHeaderNavHTML: function(html) {
+      var header = this.getHeaderNav();
+      header.innerHTML = html;
+      return header;
+    },
+
+    showPopup: function(node, containerClass) {
+      $.publish(Events.DIALOG_SHOW, {
+        dialogId: 'popup',
+        initArgs: {
+          node: node,
+          containerClass: containerClass,
         }
       });
+    },
+
+    closePopup: function() {
+      $.publish(Events.DIALOG_HIDE, {
+        dialogId: 'popup',
+      });
+    },
+
+    loadPiskelDataOnly: function(piskelData, onSuccess, onError) {
+      pskl.utils.PiskelFileUtils.decodePiskelFile(
+        piskelData,
+        function(piskel) {
+          var oldPiskel = pskl.app.piskelController.getPiskel();;
+          if (piskel.descriptor && oldPiskel) {
+            piskel.descriptor.name = oldPiskel.descriptor.name;
+            piskel.descriptor.isPublic = oldPiskel.descriptor.isPublic;
+            piskel.descriptor.description = oldPiskel.descriptor.description;
+          }
+          pskl.app.piskelController.setPiskel(piskel);
+
+          $.publish(Events.PISKEL_SAVED);
+          if (piskelData.descriptor) {
+            // Backward compatibility for v2 or older
+            piskel.setDescriptor(piskelData.descriptor);
+          }
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
+        onError ||
+          function(error) {
+            console.log('failed to load piskel: ', error);
+          }
+      );
     },
 
     loadPiskel: function(piskelData, onSuccess, onError) {

@@ -29,6 +29,10 @@
     'browse-backups' : {
       template : 'templates/dialogs/browse-backups.html',
       controller : ns.backups.BrowseBackups
+    },
+    'popup' : {
+      template : 'templates/dialogs/popup.html',
+      controller : ns.PopupController,
     }
   };
 
