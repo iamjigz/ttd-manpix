@@ -36,36 +36,38 @@
 
     this.updateSigninContainer_();
 
-    pskl.utils.Event.addEventListener(
-      this.signoutButton,
-      'click',
-      this.onSignout,
-      this
-    );
-    pskl.utils.Event.addEventListener(
-      this.toggleSigninButton,
-      'click',
-      this.onToggleSignin,
-      this
-    );
-    pskl.utils.Event.addEventListener(
-      this.otherAction,
-      'click',
-      this.onChangeAction,
-      this
-    );
-    pskl.utils.Event.addEventListener(
-      this.signinButton,
-      'click',
-      this.onSignin,
-      this
-    );
-    pskl.utils.Event.addEventListener(
-      this.createSpriteButton,
-      'click',
-      this.onCreateSprite,
-      this
-    );
+    if (this.piskelName_) {
+      pskl.utils.Event.addEventListener(
+        this.signoutButton,
+        'click',
+        this.onSignout,
+        this
+      );
+      pskl.utils.Event.addEventListener(
+        this.toggleSigninButton,
+        'click',
+        this.onToggleSignin,
+        this
+      );
+      pskl.utils.Event.addEventListener(
+        this.otherAction,
+        'click',
+        this.onChangeAction,
+        this
+      );
+      pskl.utils.Event.addEventListener(
+        this.signinButton,
+        'click',
+        this.onSignin,
+        this
+      );
+      pskl.utils.Event.addEventListener(
+        this.createSpriteButton,
+        'click',
+        this.onCreateSprite,
+        this
+      );
+    }
 
     $.subscribe(
       Events.BEFORE_SAVING_PISKEL,
@@ -107,6 +109,9 @@
   };
 
   ns.HeaderController.prototype.updateHeader_ = function() {
+    if (!this.piskelName_) {
+      return;
+    }
     try {
       var name = this.piskelController.getPiskel().getDescriptor().name;
       if (this.savedStatusService.isDirty()) {
@@ -137,6 +142,9 @@
 
   ns.HeaderController.prototype.togglePopup_ = function(val) {
     this.showPopup = val != null ? !!val : !this.showPopup;
+    if (!this.signinContainer) {
+      return;
+    }
     if (this.showPopup) {
       this.signinContainer.classList.remove('hidden');
     } else {
@@ -180,6 +188,9 @@
   };
 
   ns.HeaderController.prototype.clearInput = function(e) {
+    if (!this.usernameInput) {
+      return;
+    }
     this.usernameInput.value = '';
     this.passwordInput.value = '';
     this.password2Input.value = '';
@@ -189,6 +200,10 @@
 
   ns.HeaderController.prototype.onSignin = function(e) {
     e.preventDefault();
+    if (!this.usernameInput) {
+      return;
+    }
+
     var api = window.Api;
     this.formError.textContent = '';
     this.togglePopup_(true);

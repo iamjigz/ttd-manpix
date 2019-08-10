@@ -336,6 +336,10 @@
       }
     },
 
+    getHeader: function() {
+      return document.querySelector('.fake-piskelapp-header');
+    },
+
     getHeaderNav: function(html) {
       return document.querySelector('.fake-piskelapp-header .button-group');
     },
@@ -351,14 +355,14 @@
         dialogId: 'popup',
         initArgs: {
           node: node,
-          containerClass: containerClass,
+          containerClass: containerClass
         }
       });
     },
 
     closePopup: function() {
       $.publish(Events.DIALOG_HIDE, {
-        dialogId: 'popup',
+        dialogId: 'popup'
       });
     },
 
@@ -366,7 +370,7 @@
       pskl.utils.PiskelFileUtils.decodePiskelFile(
         piskelData,
         function(piskel) {
-          var oldPiskel = pskl.app.piskelController.getPiskel();;
+          var oldPiskel = pskl.app.piskelController.getPiskel();
           if (piskel.descriptor && oldPiskel) {
             piskel.descriptor.name = oldPiskel.descriptor.name;
             piskel.descriptor.isPublic = oldPiskel.descriptor.isPublic;
@@ -390,11 +394,22 @@
       );
     },
 
+    _piskelLoaded: false,
+
+    isPiskelLoaded: function() {
+      return this._piskelLoaded;
+    },
+
     loadPiskel: function(piskelData, onSuccess, onError) {
+      if (this._piskelLoaded) {
+        return;
+      }
+      var self = this;
       pskl.utils.PiskelFileUtils.decodePiskelFile(
         piskelData,
         function(piskel) {
           pskl.app.piskelController.setPiskel(piskel);
+          self._piskelLoaded = true;
           $.publish(Events.PISKEL_SAVED);
           if (piskelData.descriptor) {
             // Backward compatibility for v2 or older
