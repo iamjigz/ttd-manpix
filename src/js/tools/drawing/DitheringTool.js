@@ -9,7 +9,7 @@
   ns.DitheringTool = function() {
     ns.SimplePen.call(this);
     this.toolId = 'tool-dithering';
-    this.helpText = 'Dithering tool';
+    this.helpText = pskl.app.i18n('Dithering tool');
     this.shortcut = pskl.service.keyboard.Shortcuts.TOOL.DITHERING;
   };
 

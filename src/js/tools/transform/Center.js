@@ -3,10 +3,10 @@
 
   ns.Center = function () {
     this.toolId = 'tool-center';
-    this.helpText = 'Align image to the center';
+    this.helpText = pskl.app.i18n('Align image to the center');
     this.tooltipDescriptors = [
-      {key : 'ctrl', description : 'Apply to all layers'},
-      {key : 'shift', description : 'Apply to all frames'}
+      {key : 'ctrl', description : pskl.app.i18n('Apply to all layers')},
+      {key : 'shift', description : pskl.app.i18n('Apply to all frames')}
     ];
   };
 

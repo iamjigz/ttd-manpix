@@ -9,6 +9,69 @@
     FILEDOWNLOAD: 'save-file-download-partial'
   };
 
+  function applyI18n() {
+    document.querySelector(
+      '.save-form .settings-title'
+    ).textContent = pskl.app.i18n('Sprite Information');
+    document.querySelector(
+      '.save-form .settings-form-section-title > label'
+    ).textContent = pskl.app.i18n('Title') + ' : ';
+    document.querySelector(
+      '.save-form .settings-form-section-desc > label'
+    ).textContent = pskl.app.i18n('Description') + ' : ';
+    document.querySelector(
+      '.save-form .save-public-section > label > span'
+    ).textContent = pskl.app.i18n('Public') + ' : ';
+
+    document.querySelector(
+      '.save-localstorage.settings-title'
+    ).textContent = pskl.app.i18n('Save offline in Browser');
+    document.querySelector(
+      '.save-localstorage.save-status'
+    ).textContent = pskl.app.i18n(
+      'Your piskel will be saved locally and will only be accessible from this browser.'
+    );
+
+    try {
+      document.querySelector(
+        '.save-file.settings-title'
+      ).textContent = pskl.app.i18n('Save offline as File');
+      document.querySelector(
+        '.save-file.save-status'
+      ).textContent = pskl.app.i18n(
+        'Your sprite will be downloaded as a .piskel file.'
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+    try {
+      document.querySelector(
+        '.save-online.settings-title'
+      ).textContent = pskl.app.i18n('Save online');
+      document.querySelector(
+        '.save-online.save-status'
+      ).textContent = pskl.app.i18n(
+        'Your piskel will be stored online in your gallery.'
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+    try {
+      document.querySelector(
+        '.save-desktop.settings-title'
+      ).textContent = pskl.app.i18n('Save as File');
+      document.querySelector(
+        '.save-desktop.save-status'
+      ).textContent = pskl.app.i18n(
+        'Your sprite will be saved as a .piskel file.'
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   ns.SaveController = function(piskelController) {
     this.piskelController = piskelController;
   };
@@ -93,6 +156,8 @@
       this.disableSaveButtons_.bind(this)
     );
     $.subscribe(Events.AFTER_SAVING_PISKEL, this.enableSaveButtons_.bind(this));
+
+    applyI18n();
   };
 
   ns.SaveController.prototype.updateSaveToGalleryMessage_ = function(

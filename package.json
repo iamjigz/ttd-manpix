@@ -1,7 +1,7 @@
 {
-  "name": "piskel",
-  "version": "0.13.0",
-  "description": "Pixel art editor",
+  "name": "unpiskel",
+  "version": "0.1.0",
+  "description": "Customized pixel art editor",
   "author": "Julian Descottes <julian.descottes@gmail.com>",
   "contributors": [
     "Vincent Renaudin"

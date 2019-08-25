@@ -1,4 +1,4 @@
-(function () {
+(function() {
   var ns = $.namespace('pskl.tools.drawing');
   /**
    * Abstract shape tool class, parent to all shape tools (rectangle, circle).
@@ -10,7 +10,7 @@
     this.startRow = null;
 
     this.tooltipDescriptors = [
-      {key : 'shift', description : 'Keep 1 to 1 ratio'}
+      { key: 'shift', description: pskl.app.i18n('Keep 1 to 1 ratio') }
     ];
   };
 
@@ -23,7 +23,13 @@
   /**
    * @override
    */
-  ns.ShapeTool.prototype.applyToolAt = function(col, row, frame, overlay, event) {
+  ns.ShapeTool.prototype.applyToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     $.publish(Events.DRAG_START, [col, row]);
     this.startCol = col;
     this.startRow = row;
@@ -33,7 +39,13 @@
     this.draw(col, row, this.getToolColor(), overlay, penSize);
   };
 
-  ns.ShapeTool.prototype.moveToolAt = function(col, row, frame, overlay, event) {
+  ns.ShapeTool.prototype.moveToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     var coords = this.getCoordinates_(col, row, event);
     $.publish(Events.CURSOR_MOVED, [coords.col, coords.row]);
 
@@ -51,7 +63,13 @@
   /**
    * @override
    */
-  ns.ShapeTool.prototype.releaseToolAt = function(col, row, frame, overlay, event) {
+  ns.ShapeTool.prototype.releaseToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     overlay.clear();
     var coords = this.getCoordinates_(col, row, event);
     var color = this.getToolColor();
@@ -60,12 +78,12 @@
 
     $.publish(Events.DRAG_END);
     this.raiseSaveStateEvent({
-      col : coords.col,
-      row : coords.row,
-      startCol : this.startCol,
-      startRow : this.startRow,
-      color : color,
-      penSize : penSize
+      col: coords.col,
+      row: coords.row,
+      startCol: this.startCol,
+      startRow: this.startRow,
+      color: color,
+      penSize: penSize
     });
   };
 
@@ -75,7 +93,13 @@
   ns.ShapeTool.prototype.replay = function(frame, replayData) {
     this.startCol = replayData.startCol;
     this.startRow = replayData.startRow;
-    this.draw(replayData.col, replayData.row, replayData.color, frame, replayData.penSize);
+    this.draw(
+      replayData.col,
+      replayData.row,
+      replayData.color,
+      frame,
+      replayData.penSize
+    );
   };
 
   /**
@@ -89,7 +113,7 @@
     if (event.shiftKey) {
       return this.getScaledCoordinates_(col, row);
     } else {
-      return {col : col, row : row};
+      return { col: col, row: row };
     }
   };
 
@@ -107,15 +131,14 @@
     var absY = Math.abs(dY);
 
     var delta = Math.min(absX, absY);
-    row = this.startRow - ((dY / absY) * delta);
-    col = this.startCol - ((dX / absX) * delta);
+    row = this.startRow - (dY / absY) * delta;
+    col = this.startCol - (dX / absX) * delta;
 
     return {
-      col : col,
-      row : row
+      col: col,
+      row: row
     };
   };
 
   ns.ShapeTool.prototype.draw = Constants.ABSTRACT_FUNCTION;
-
 })();

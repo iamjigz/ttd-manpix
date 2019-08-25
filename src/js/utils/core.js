@@ -1,10 +1,10 @@
 jQuery.namespace = function() {
   var a = arguments;
   var o = null;
-  for (var i = 0; i < a.length ; i++) {
+  for (var i = 0; i < a.length; i++) {
     var d = a[i].split('.');
     o = window;
-    for (var j = 0 ; j < d.length ; j++) {
+    for (var j = 0; j < d.length; j++) {
       o[d[j]] = o[d[j]] || {};
       o = o[d[j]];
     }
@@ -16,17 +16,19 @@ jQuery.namespace = function() {
  * Need a polyfill for PhantomJS
  */
 if (!Function.prototype.bind) {
-  Function.prototype.bind = function (oThis) {
+  Function.prototype.bind = function(oThis) {
     if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5
       // internal IsCallable function
-      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+      throw new TypeError(
+        'Function.prototype.bind - what is trying to be bound is not callable'
+      );
     }
 
     var bindArgs = Array.prototype.slice.call(arguments, 1);
     var fToBind = this;
-    var FNOP = function () {};
-    var fBound = function () {
+    var FNOP = function() {};
+    var fBound = function() {
       var args = bindArgs.concat(Array.prototype.slice.call(arguments));
       return fToBind.apply(this instanceof FNOP && oThis ? this : oThis, args);
     };
@@ -42,7 +44,7 @@ if (!Function.prototype.bind) {
  * Polyfill for typedarrays' fill method for PhantomJS
  */
 if (!Uint32Array.prototype.fill) {
-  Uint32Array.prototype.fill = function (value, start, end) {
+  Uint32Array.prototype.fill = function(value, start, end) {
     start = typeof start === 'undefined' ? 0 : start;
     end = typeof end === 'undefined' ? this.length : end;
 
@@ -65,7 +67,8 @@ if (!Uint32Array.prototype.fill) {
  *
  * @require Constants
  */
-(function() { // namespace: pskl.utils
+(function() {
+  // namespace: pskl.utils
 
   var ns = $.namespace('pskl.utils');
 
@@ -76,8 +79,13 @@ if (!Uint32Array.prototype.fill) {
    * @param  {Number} b blue value, between 0 and 255
    * @return {String} hex representation of the color '#ABCDEF'
    */
-  ns.rgbToHex = function (r, g, b) {
-    return '#' + pskl.utils.componentToHex(r) + pskl.utils.componentToHex(g) + pskl.utils.componentToHex(b);
+  ns.rgbToHex = function(r, g, b) {
+    return (
+      '#' +
+      pskl.utils.componentToHex(r) +
+      pskl.utils.componentToHex(g) +
+      pskl.utils.componentToHex(b)
+    );
   };
 
   /**
@@ -85,7 +93,7 @@ if (!Uint32Array.prototype.fill) {
    * @param  {Number} c component value, between 0 and 255
    * @return {String} eg. '0A'
    */
-  ns.componentToHex = function (c) {
+  ns.componentToHex = function(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? '0' + hex : hex;
   };
@@ -96,12 +104,12 @@ if (!Uint32Array.prototype.fill) {
       return intHexCache[int];
     }
 
-    var hex = ns.rgbToHex(int & 0xff, int >> 8 & 0xff, int >> 16 & 0xff);
+    var hex = ns.rgbToHex(int & 0xff, (int >> 8) & 0xff, (int >> 16) & 0xff);
     intHexCache[int] = hex;
     return hex;
   };
 
-  ns.normalize = function (value, def) {
+  ns.normalize = function(value, def) {
     if (typeof value === 'undefined' || value === null) {
       return def;
     } else {
@@ -115,9 +123,12 @@ if (!Uint32Array.prototype.fill) {
     extendedObject.prototype.superclass = inheritFrom.prototype;
   };
 
-  ns.wrap = function (wrapper, wrappedObject) {
+  ns.wrap = function(wrapper, wrappedObject) {
     for (var prop in wrappedObject) {
-      if (typeof wrappedObject[prop] === 'function' && typeof wrapper[prop] === 'undefined') {
+      if (
+        typeof wrappedObject[prop] === 'function' &&
+        typeof wrapper[prop] === 'undefined'
+      ) {
         wrapper[prop] = wrappedObject[prop].bind(wrappedObject);
       }
     }
@@ -138,27 +149,27 @@ if (!Uint32Array.prototype.fill) {
     return hash;
   };
 
-  ns.copy = function (object) {
+  ns.copy = function(object) {
     return JSON.parse(JSON.stringify(object));
   };
 
   var entityMap = {
-    '&' : '&amp;',
-    '<' : '&lt;',
-    '>' : '&gt;',
-    '"' : '&quot;',
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
     '\'': '&#39;',
-    '/' : '&#x2F;'
+    '/': '&#x2F;'
   };
-  ns.escapeHtml = function (string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
+  ns.escapeHtml = function(string) {
+    return String(string).replace(/[&<>"'\/]/g, function(s) {
       return entityMap[s];
     });
   };
 
   var colorCache = {};
   var colorCacheReverse = {};
-  ns.colorToInt = function (color) {
+  ns.colorToInt = function(color) {
     if (typeof color === 'number') {
       return color;
     }
@@ -171,7 +182,7 @@ if (!Uint32Array.prototype.fill) {
     if (tc && tc.ok) {
       var rgb = tc.toRgb();
       var a = Math.round(rgb.a * 255);
-      var intValue = (a << 24 >>> 0) + (rgb.b << 16) + (rgb.g << 8) + rgb.r;
+      var intValue = ((a << 24) >>> 0) + (rgb.b << 16) + (rgb.g << 8) + rgb.r;
       if (a === 0) {
         // assign all 'transparent' colors to 0, theoretically mapped to rgba(0,0,0,0) only
         intValue = 0;
@@ -203,9 +214,9 @@ if (!Uint32Array.prototype.fill) {
     }
 
     var r = intValue & 0xff;
-    var g = intValue >> 8 & 0xff;
-    var b = intValue >> 16 & 0xff;
-    var a = (intValue >> 24 >>> 0 & 0xff) / 255;
+    var g = (intValue >> 8) & 0xff;
+    var b = (intValue >> 16) & 0xff;
+    var a = (((intValue >> 24) >>> 0) & 0xff) / 255;
     var color = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
     colorCache[color] = intValue;
@@ -213,13 +224,27 @@ if (!Uint32Array.prototype.fill) {
     return color;
   };
 
+  ns.applyI18nDOM = function(selector, replacement) {
+    var node = document.querySelector(selector);
+    if (!node) {
+      console.log('cannot apply i18n on DOM with selector: ' + selector);
+    } else {
+      var text = pskl.app.i18n(node.innerText.trim());
+      if (replacement) {
+        Object.keys(replacement).forEach(function(key) {
+          text = text.replace(key, replacement[key]);
+        });
+      }
+      node.innerText = text;
+    }
+  };
+
   var reEntityMap = {};
-  ns.unescapeHtml = function (string) {
+  ns.unescapeHtml = function(string) {
     Object.keys(entityMap).forEach(function(key) {
       reEntityMap[key] = reEntityMap[key] || new RegExp(entityMap[key], 'g');
       string = string.replace(reEntityMap[key], key);
     });
     return string;
   };
-
 })();

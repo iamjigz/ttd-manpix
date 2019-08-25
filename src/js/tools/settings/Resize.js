@@ -4,7 +4,7 @@
 
   ns.Resize = function () {
     this.toolId = 'settings-resize-white';
-    this.helpText = 'Show resize settings';
+    this.helpText = pskl.app.i18n('Show resize settings');
     this.isSettings = true;
     this.tooltipDescriptors = [
     ];

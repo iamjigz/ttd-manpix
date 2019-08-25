@@ -8,10 +8,13 @@
 
   ns.Stroke = function() {
     this.toolId = 'tool-stroke';
-    this.helpText = 'Stroke tool';
+    this.helpText = pskl.app.i18n('Stroke tool');
     this.shortcut = pskl.service.keyboard.Shortcuts.TOOL.STROKE;
     this.tooltipDescriptors = [
-      {key : 'shift', description : 'Hold shift to draw straight lines'}
+      {
+        key: 'shift',
+        description: pskl.app.i18n('Hold shift to draw straight lines')
+      }
     ];
 
     // Stroke's first point coordinates (set in applyToolAt)
@@ -66,7 +69,13 @@
   /**
    * @override
    */
-  ns.Stroke.prototype.releaseToolAt = function(col, row, frame, overlay, event) {
+  ns.Stroke.prototype.releaseToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     var penSize = pskl.app.penSizeService.getPenSize();
     var isStraight = event.shiftKey;
     var color = this.getToolColor();
@@ -79,46 +88,81 @@
     overlay.clear();
 
     this.raiseSaveStateEvent({
-      col : col,
-      row : row,
-      startCol : this.startCol,
-      startRow : this.startRow,
-      color : color,
-      penSize : penSize,
-      isStraight : isStraight
+      col: col,
+      row: row,
+      startCol: this.startCol,
+      startRow: this.startRow,
+      color: color,
+      penSize: penSize,
+      isStraight: isStraight
     });
   };
 
-  ns.Stroke.prototype.draw_ = function (col, row, color, targetFrame, penSize, isStraight) {
+  ns.Stroke.prototype.draw_ = function(
+    col,
+    row,
+    color,
+    targetFrame,
+    penSize,
+    isStraight
+  ) {
     var linePixels;
     if (isStraight) {
-      linePixels = pskl.PixelUtils.getUniformLinePixels(this.startCol, col, this.startRow, row);
+      linePixels = pskl.PixelUtils.getUniformLinePixels(
+        this.startCol,
+        col,
+        this.startRow,
+        row
+      );
     } else {
-      linePixels = pskl.PixelUtils.getLinePixels(col, this.startCol, row, this.startRow);
+      linePixels = pskl.PixelUtils.getLinePixels(
+        col,
+        this.startCol,
+        row,
+        this.startRow
+      );
     }
 
     //draw the square ends of the line
-    pskl.PixelUtils.resizePixel(linePixels[0].col, linePixels[0].row, penSize)
-      .forEach(function (point) {targetFrame.setPixel(point[0], point[1], color);});
-    pskl.PixelUtils.resizePixel(linePixels[linePixels.length - 1].col, linePixels[linePixels.length - 1].row, penSize)
-      .forEach(function (point) {targetFrame.setPixel(point[0], point[1],color);});
+    pskl.PixelUtils.resizePixel(
+      linePixels[0].col,
+      linePixels[0].row,
+      penSize
+    ).forEach(function(point) {
+      targetFrame.setPixel(point[0], point[1], color);
+    });
+    pskl.PixelUtils.resizePixel(
+      linePixels[linePixels.length - 1].col,
+      linePixels[linePixels.length - 1].row,
+      penSize
+    ).forEach(function(point) {
+      targetFrame.setPixel(point[0], point[1], color);
+    });
 
     //for each step along the line, draw an x centered on that pixel of size penSize
-    linePixels.forEach(function (point) {
+    linePixels.forEach(function(point) {
       for (var i = 0; i < penSize; i++) {
         targetFrame.setPixel(
-          point.col - Math.floor(penSize / 2) + i, point.row - Math.floor(penSize / 2) + i, color
+          point.col - Math.floor(penSize / 2) + i,
+          point.row - Math.floor(penSize / 2) + i,
+          color
         );
         targetFrame.setPixel(
-          point.col - Math.floor(penSize / 2) + i, point.row + Math.ceil(penSize / 2) - i - 1, color
+          point.col - Math.floor(penSize / 2) + i,
+          point.row + Math.ceil(penSize / 2) - i - 1,
+          color
         );
         //draw an additional x directly next to the first to prevent unwanted dithering
         if (i !== 0) {
           targetFrame.setPixel(
-            point.col - Math.floor(penSize / 2) + i, point.row - Math.floor(penSize / 2) + i - 1, color
+            point.col - Math.floor(penSize / 2) + i,
+            point.row - Math.floor(penSize / 2) + i - 1,
+            color
           );
           targetFrame.setPixel(
-            point.col - Math.floor(penSize / 2) + i, point.row + Math.ceil(penSize / 2) - i, color
+            point.col - Math.floor(penSize / 2) + i,
+            point.row + Math.ceil(penSize / 2) - i,
+            color
           );
         }
       }
@@ -128,7 +172,13 @@
   ns.Stroke.prototype.replay = function(frame, replayData) {
     this.startCol = replayData.startCol;
     this.startRow = replayData.startRow;
-    this.draw_(replayData.col, replayData.row, replayData.color, frame, replayData.penSize, replayData.isStraight);
+    this.draw_(
+      replayData.col,
+      replayData.row,
+      replayData.color,
+      frame,
+      replayData.penSize,
+      replayData.isStraight
+    );
   };
-
 })();

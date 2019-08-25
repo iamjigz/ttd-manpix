@@ -1,30 +1,40 @@
-(function () {
+(function() {
   var ns = $.namespace('pskl.controller.dialogs');
 
   var SHORTCUT_EDITING_CLASSNAME = 'cheatsheet-shortcut-editing';
 
-  ns.CheatsheetController = function () {};
+  ns.CheatsheetController = function() {};
 
   pskl.utils.inherit(ns.CheatsheetController, ns.AbstractDialogController);
 
-  ns.CheatsheetController.prototype.init = function () {
+  ns.CheatsheetController.prototype.init = function() {
     this.superclass.init.call(this);
 
     this.cheatsheetEl = document.getElementById('cheatsheetContainer');
     this.eventTrapInput = document.getElementById('cheatsheetEventTrap');
 
-    this.addEventListener('.cheatsheet-restore-defaults', 'click', this.onRestoreDefaultsClick_);
+    this.addEventListener(
+      '.cheatsheet-restore-defaults',
+      'click',
+      this.onRestoreDefaultsClick_
+    );
     this.addEventListener(this.cheatsheetEl, 'click', this.onCheatsheetClick_);
-    this.addEventListener(this.eventTrapInput, 'keydown', this.onEventTrapKeydown_);
+    this.addEventListener(
+      this.eventTrapInput,
+      'keydown',
+      this.onEventTrapKeydown_
+    );
 
     this.onShortcutsChanged_ = this.onShortcutsChanged_.bind(this);
     $.subscribe(Events.SHORTCUTS_CHANGED, this.onShortcutsChanged_);
 
     this.initMarkup_();
-    document.querySelector('.cheatsheet-helptext').setAttribute('title', this.getHelptextTitle_());
+    document
+      .querySelector('.cheatsheet-helptext')
+      .setAttribute('title', this.getHelptextTitle_());
   };
 
-  ns.CheatsheetController.prototype.destroy = function () {
+  ns.CheatsheetController.prototype.destroy = function() {
     this.eventTrapInput.blur();
 
     $.unsubscribe(Events.SHORTCUTS_CHANGED, this.onShortcutsChanged_);
@@ -33,17 +43,21 @@
     this.superclass.destroy.call(this);
   };
 
-  ns.CheatsheetController.prototype.onRestoreDefaultsClick_ = function () {
-    if (window.confirm('Replace all custom shortcuts by the default Piskel shortcuts ?')) {
+  ns.CheatsheetController.prototype.onRestoreDefaultsClick_ = function() {
+    if (
+      window.confirm(
+        'Replace all custom shortcuts by the default Piskel shortcuts ?'
+      )
+    ) {
       pskl.app.shortcutService.restoreDefaultShortcuts();
     }
   };
 
-  ns.CheatsheetController.prototype.onShortcutsChanged_ = function () {
+  ns.CheatsheetController.prototype.onShortcutsChanged_ = function() {
     this.initMarkup_();
   };
 
-  ns.CheatsheetController.prototype.onCheatsheetClick_ = function (evt) {
+  ns.CheatsheetController.prototype.onCheatsheetClick_ = function(evt) {
     var shortcutEl = pskl.utils.Dom.getParentWithData(evt.target, 'shortcutId');
     if (!shortcutEl) {
       pskl.utils.Dom.removeClass(SHORTCUT_EDITING_CLASSNAME);
@@ -63,18 +77,22 @@
     }
   };
 
-  ns.CheatsheetController.prototype.onEventTrapKeydown_ = function (evt) {
+  ns.CheatsheetController.prototype.onEventTrapKeydown_ = function(evt) {
     var shortcutEl = document.querySelector('.' + SHORTCUT_EDITING_CLASSNAME);
     if (!shortcutEl) {
       return;
     }
 
-    var shortcutKeyObject = pskl.service.keyboard.KeyUtils.createKeyFromEvent(evt);
+    var shortcutKeyObject = pskl.service.keyboard.KeyUtils.createKeyFromEvent(
+      evt
+    );
     if (!shortcutKeyObject) {
       return;
     }
 
-    var shortcutKeyString = pskl.service.keyboard.KeyUtils.stringify(shortcutKeyObject);
+    var shortcutKeyString = pskl.service.keyboard.KeyUtils.stringify(
+      shortcutKeyObject
+    );
     var shortcutId = shortcutEl.dataset.shortcutId;
     var shortcut = pskl.app.shortcutService.getShortcutById(shortcutId);
     pskl.app.shortcutService.updateShortcut(shortcut, shortcutKeyString);
@@ -85,37 +103,54 @@
     evt.preventDefault();
   };
 
-  ns.CheatsheetController.prototype.initMarkup_ = function () {
-    this.initMarkupForCategory_('TOOL', '.cheatsheet-tool-shortcuts', this.getToolIconClass_);
+  ns.CheatsheetController.prototype.initMarkup_ = function() {
+    this.initMarkupForCategory_(
+      'TOOL',
+      '.cheatsheet-tool-shortcuts',
+      this.getToolIconClass_
+    );
     this.initMarkupForCategory_('MISC', '.cheatsheet-misc-shortcuts');
     this.initMarkupForCategory_('COLOR', '.cheatsheet-color-shortcuts');
     this.initMarkupForCategory_('SELECTION', '.cheatsheet-selection-shortcuts');
     this.initMarkupForCategory_('STORAGE', '.cheatsheet-storage-shortcuts');
   };
 
-  ns.CheatsheetController.prototype.getToolIconClass_ = function (shortcut) {
+  ns.CheatsheetController.prototype.getToolIconClass_ = function(shortcut) {
     return 'tool-icon cheatsheet-icon-' + shortcut.getId();
   };
 
-  ns.CheatsheetController.prototype.initMarkupForCategory_ = function (category, container, iconClassProvider) {
+  ns.CheatsheetController.prototype.initMarkupForCategory_ = function(
+    category,
+    container,
+    iconClassProvider
+  ) {
     var shortcutMap = pskl.service.keyboard.Shortcuts[category];
 
-    var descriptors = Object.keys(shortcutMap).map(function (shortcutKey) {
-      return this.toDescriptor_(shortcutMap[shortcutKey], iconClassProvider);
-    }.bind(this));
+    var descriptors = Object.keys(shortcutMap).map(
+      function(shortcutKey) {
+        return this.toDescriptor_(shortcutMap[shortcutKey], iconClassProvider);
+      }.bind(this)
+    );
 
     this.initMarkupForDescriptors_(descriptors, container);
   };
 
-  ns.CheatsheetController.prototype.toDescriptor_ = function (shortcut, iconClassProvider) {
-    var iconClass = typeof iconClassProvider == 'function' ? iconClassProvider(shortcut) : '';
+  ns.CheatsheetController.prototype.toDescriptor_ = function(
+    shortcut,
+    iconClassProvider
+  ) {
+    var iconClass =
+      typeof iconClassProvider == 'function' ? iconClassProvider(shortcut) : '';
     return {
-      'shortcut' : shortcut,
-      'iconClass' : iconClass
+      shortcut: shortcut,
+      iconClass: iconClass
     };
   };
 
-  ns.CheatsheetController.prototype.initMarkupForDescriptors_ = function (descriptors, containerSelector) {
+  ns.CheatsheetController.prototype.initMarkupForDescriptors_ = function(
+    descriptors,
+    containerSelector
+  ) {
     var container = document.querySelector(containerSelector);
     if (!container) {
       return;
@@ -124,10 +159,16 @@
     container.innerHTML = markupArray.join('');
   };
 
-  ns.CheatsheetController.prototype.getMarkupForDescriptor_ = function (descriptor) {
-    var shortcutTemplate = pskl.utils.Template.get('cheatsheet-shortcut-template');
+  ns.CheatsheetController.prototype.getMarkupForDescriptor_ = function(
+    descriptor
+  ) {
+    var shortcutTemplate = pskl.utils.Template.get(
+      'cheatsheet-shortcut-template'
+    );
     var shortcut = descriptor.shortcut;
-    var description = shortcut.isCustom() ? shortcut.getDescription() + ' *' : shortcut.getDescription();
+    var description = shortcut.isCustom() ?
+      pskl.app.i18n(shortcut.getDescription()) + ' *' :
+      pskl.app.i18n(shortcut.getDescription());
 
     var shortcutClasses = [];
     if (shortcut.isUndefined()) {
@@ -137,22 +178,24 @@
       shortcutClasses.push('cheatsheet-shortcut-editable');
     }
 
-    var title = shortcut.isEditable() ? 'Click to edit the key' : 'Shortcut cannot be remapped';
+    var title = shortcut.isEditable() ?
+      'Click to edit the key' :
+      'Shortcut cannot be remapped';
 
     var markup = pskl.utils.Template.replace(shortcutTemplate, {
-      id : shortcut.getId(),
-      title : title,
-      icon : descriptor.iconClass,
-      description : description,
+      id: shortcut.getId(),
+      title: title,
+      icon: descriptor.iconClass,
+      description: description,
       // Avoid sanitization
-      '!key!' : this.formatKey_(shortcut.getDisplayKey()),
-      className : shortcutClasses.join(' ')
+      '!key!': this.formatKey_(shortcut.getDisplayKey()),
+      className: shortcutClasses.join(' ')
     });
 
     return markup;
   };
 
-  ns.CheatsheetController.prototype.formatKey_ = function (key) {
+  ns.CheatsheetController.prototype.formatKey_ = function(key) {
     if (pskl.utils.UserAgent.isMac) {
       key = key.replace('ctrl', 'cmd');
       key = key.replace('alt', 'option');
@@ -168,7 +211,7 @@
     return key;
   };
 
-  ns.CheatsheetController.prototype.getHelptextTitle_ = function () {
+  ns.CheatsheetController.prototype.getHelptextTitle_ = function() {
     var helpItems = [
       'Click on a shortcut to change the key.',
       'When the shortcut blinks, press the key on your keyboard to assign it.',
@@ -176,10 +219,13 @@
       'Click on \'Restore default shortcuts\' to erase all custom shortcuts.'
     ];
 
-    var helptextTitle = helpItems.reduce(function (p, n) {
-      return p + '<div class="cheatsheet-helptext-tooltip-item">' + n + '</div>';
+    var helptextTitle = helpItems.reduce(function(p, n) {
+      return (
+        p + '<div class="cheatsheet-helptext-tooltip-item">' + n + '</div>'
+      );
     }, '');
-    helptextTitle = '<div class="cheatsheet-helptext-tooltip">' + helptextTitle + '</div>';
+    helptextTitle =
+      '<div class="cheatsheet-helptext-tooltip">' + helptextTitle + '</div>';
     return helptextTitle;
   };
 })();

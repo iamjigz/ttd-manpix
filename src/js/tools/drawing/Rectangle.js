@@ -10,7 +10,7 @@
     ns.ShapeTool.call(this);
 
     this.toolId = 'tool-rectangle';
-    this.helpText = 'Rectangle tool';
+    this.helpText = pskl.app.i18n('Rectangle tool');
     this.shortcut = pskl.service.keyboard.Shortcuts.TOOL.RECTANGLE;
   };
 
@@ -19,8 +19,19 @@
   /**
    * @override
    */
-  ns.Rectangle.prototype.draw = function (col, row, color, targetFrame, penSize) {
-    var rectangle = pskl.PixelUtils.getOrderedRectangleCoordinates(this.startCol, this.startRow, col, row);
+  ns.Rectangle.prototype.draw = function(
+    col,
+    row,
+    color,
+    targetFrame,
+    penSize
+  ) {
+    var rectangle = pskl.PixelUtils.getOrderedRectangleCoordinates(
+      this.startCol,
+      this.startRow,
+      col,
+      row
+    );
 
     for (var x = rectangle.x0; x <= rectangle.x1; x++) {
       for (var y = rectangle.y0; y <= rectangle.y1; y++) {

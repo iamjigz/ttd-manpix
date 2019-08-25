@@ -4,8 +4,35 @@
 
   // scale canvas to avoid blurry text
   var CANVAS_SCALE = 3.1;
-  var PX_TO_CM =  38 * CANVAS_SCALE;
+  var PX_TO_CM = 38 * CANVAS_SCALE;
   var PX_TO_PT = 0.75 / CANVAS_SCALE;
+
+  function applyI18n() {
+    pskl.utils.applyI18nDOM('.export-panel-header.export-info', {
+      '|TYPE|': 'PDF'
+    });
+    pskl.utils.applyI18nDOM(
+      '.settings-item.export-scale > label[for=scale-input]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=pdf-show-grid]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .pdf-grid-note'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=pdf-show-cell-counter]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=pdf-hide-image]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .pdf-download-button'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .pdf-export-datauri-info.export-info'
+    );
+  }
 
   ns.PdfExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
@@ -21,7 +48,9 @@
     var downloadButton = document.querySelector('.pdf-download-button');
     var showGridInput = document.querySelector('input#pdf-show-grid');
     var hideImageInput = document.querySelector('input#pdf-hide-image');
-    var showCellCounterInput = document.querySelector('input#pdf-show-cell-counter');
+    var showCellCounterInput = document.querySelector(
+      'input#pdf-show-cell-counter'
+    );
 
     // Initialize zoom controls
     this.widthInput = document.querySelector('.export-resize .resize-width');
@@ -46,10 +75,16 @@
     this.addEventListener(downloadButton, 'click', this.onDownloadClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
-    this.addEventListener(showCellCounterInput, 'change', this.onShowCellCounterChange_);
+    this.addEventListener(
+      showCellCounterInput,
+      'change',
+      this.onShowCellCounterChange_
+    );
+
+    applyI18n();
   };
 
-  ns.PdfExportController.prototype.onScaleChange_ = function () {
+  ns.PdfExportController.prototype.onScaleChange_ = function() {
     var value = PX_TO_CM;
     if (!isNaN(value)) {
       UserSettings.set(UserSettings.EXPORT_SCALE, value);
@@ -130,7 +165,10 @@
   };
 
   ns.PdfExportController.prototype.createPngSpritesheet_ = function() {
-    var renderer = new pskl.rendering.PiskelRenderer(this.piskelController, '#FFFFFF');
+    var renderer = new pskl.rendering.PiskelRenderer(
+      this.piskelController,
+      '#FFFFFF'
+    );
     var outputCanvas = renderer.renderAsCanvas(
       this.getColumns_(),
       this.getRows_()
@@ -223,7 +261,7 @@
     try {
       doc.setFillColor(gridColor);
     } catch (e) {
-        /* ignore unrecognized colors */
+      /* ignore unrecognized colors */
     }
 
     // line below header
@@ -241,9 +279,8 @@
       0,
       imgMargin * 2 + headerHeight,
       canvas.width * PX_TO_PT,
-        canvas.height * PX_TO_PT
+      canvas.height * PX_TO_PT
     );
-
 
     var footerY = headerHeight + imgMargin * 2 + +canvas.height * PX_TO_PT;
     // line above footer
@@ -263,7 +300,7 @@
 
       var i = 0;
       var n = 0;
-      var w = (legendSize / 5.0 + textLength) * (colors.length - 1) / 2;
+      var w = ((legendSize / 5.0 + textLength) * (colors.length - 1)) / 2;
       var baseX = (canvas.width * PX_TO_PT - w) / 2;
 
       for (var i in colors) {
@@ -276,7 +313,9 @@
         doc.setDrawColor('#000000');
         doc.setFontSize(legendSize);
         doc.rect(x, footerY + legendSize, legendSize * 2, legendSize, 'FD');
-        doc.text(i + '', x + legendSize * 2.5, footerY + legendSize, {baseline: 'top'});
+        doc.text(i + '', x + legendSize * 2.5, footerY + legendSize, {
+          baseline: 'top'
+        });
         n++;
         if (n >= colors.length / 2 && !nextLine) {
           n = 0;

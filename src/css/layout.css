@@ -2,10 +2,17 @@
  * Application layout
  */
 
+button,
+.button,
+input[type="button"],
+input[type="submit"] {
+  white-space: nowrap !important;
+}
+
 .flex-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .main-wrapper {
@@ -120,22 +127,26 @@
 
 .light-picker-background,
 .light-canvas-background .canvas-background {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEXf39////8zI3BgAAAAHklEQVR4AWNghAIGCMDgjwgFCDDSw2M0PSCD0fQAACRcAgF4ciGUAAAAAElFTkSuQmCC') repeat;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEXf39////8zI3BgAAAAHklEQVR4AWNghAIGCMDgjwgFCDDSw2M0PSCD0fQAACRcAgF4ciGUAAAAAElFTkSuQmCC")
+    repeat;
 }
 
 .medium-picker-background,
 .medium-canvas-background .canvas-background {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEW6urr///82MBGFAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=') repeat;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEW6urr///82MBGFAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=")
+    repeat;
 }
 
 .lowcont-medium-picker-background,
 .lowcont-medium-canvas-background .canvas-background {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEXV1dXb29tFGkCIAAAAHklEQVR4AWNghAIGCMDgjwgFCDDSw2M0PSCD0fQAACRcAgF4ciGUAAAAAElFTkSuQmCC') repeat;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEXV1dXb29tFGkCIAAAAHklEQVR4AWNghAIGCMDgjwgFCDDSw2M0PSCD0fQAACRcAgF4ciGUAAAAAElFTkSuQmCC")
+    repeat;
 }
 
 .lowcont-dark-picker-background,
 .lowcont-dark-canvas-background .canvas-background {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEVMTExVVVUnhsEkAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=') repeat;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEVMTExVVVUnhsEkAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=")
+    repeat;
 }
 
 .canvas.onion-skin-canvas {
@@ -153,7 +164,7 @@
 .tools-wrapper,
 .options-wrapper,
 .palette-wrapper {
-  float : left;
+  float: left;
 }
 
 /**
@@ -163,34 +174,44 @@
  * - 3 : draw layers above current layer
  * - 4 : draw the tools overlay
  */
-.canvas.layers-below-canvas  {z-index:  7;}
-.canvas.drawing-canvas       {z-index:  8;}
-.canvas.canvas-overlay       {z-index:  9;}
-.canvas.onion-skin-canvas    {z-index:  10;}
-.canvas.layers-above-canvas  {z-index:  11;}
+.canvas.layers-below-canvas {
+  z-index: 7;
+}
+.canvas.drawing-canvas {
+  z-index: 8;
+}
+.canvas.canvas-overlay {
+  z-index: 9;
+}
+.canvas.onion-skin-canvas {
+  z-index: 10;
+}
+.canvas.layers-above-canvas {
+  z-index: 11;
+}
 
 #tool-section {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 @media (max-width: 999px) {
-    .palettes-list-container {
-        margin-right: 4px;
-        max-width: 88px !important;
-    }
-    #tool-section {
-        max-width: 115px;
-        padding-bottom: 20px;
-    }
-    .column-wrapper {
-        left: 115px;
-    }
-    .cursor-coordinates {
-      margin-top: 15px;
-      margin-left: 20px;
-      height: 35px;
-    }
-    .right-sticky-section.expanded {
-      left: 115px !important;
-    }
+  .palettes-list-container {
+    margin-right: 4px;
+    max-width: 88px !important;
+  }
+  #tool-section {
+    max-width: 115px;
+    padding-bottom: 20px;
+  }
+  .column-wrapper {
+    left: 115px;
+  }
+  .cursor-coordinates {
+    margin-top: 15px;
+    margin-left: 20px;
+    height: 35px;
+  }
+  .right-sticky-section.expanded {
+    left: 115px !important;
+  }
 }

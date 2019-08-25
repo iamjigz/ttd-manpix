@@ -4,7 +4,7 @@
 
   ns.Counter = function () {
     this.toolId = 'settings-counter-white';
-    this.helpText = 'Show color counter';
+    this.helpText = pskl.app.i18n('Show color counter');
     this.isSettings = true;
     this.tooltipDescriptors = [
     ];

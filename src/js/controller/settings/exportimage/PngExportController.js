@@ -15,6 +15,33 @@
     return count + ' ' + word + 's';
   };
 
+  function applyI18n() {
+    pskl.utils.applyI18nDOM('.export-panel-header.export-info', {
+      '|TYPE|': 'PNG'
+    });
+    pskl.utils.applyI18nDOM(
+      '.settings-item.export-scale > label[for=scale-input]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=png-show-grid]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .png-grid-note'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=png-show-cell-counter]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row label[for=png-hide-image]'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .png-download-button'
+    );
+    pskl.utils.applyI18nDOM(
+      '.export-panel-section.export-panel-row .png-export-datauri-info.export-info'
+    );
+  }
+
   ns.PngExportController = function(piskelController, exportController) {
     this.piskelController = piskelController;
     this.exportController = exportController;
@@ -37,11 +64,11 @@
     this.heightInput = document.querySelector('.export-resize .resize-height');
     var scale = pskl.UserSettings.get(pskl.UserSettings.EXPORT_SCALE);
     this.sizeInputWidget = new pskl.widgets.SizeInput({
-      widthInput : this.widthInput,
-      heightInput : this.heightInput,
-      initWidth : this.piskelController.getWidth() * scale,
-      initHeight : this.piskelController.getHeight() * scale,
-      onChange : this.onSizeInputChange_
+      widthInput: this.widthInput,
+      heightInput: this.heightInput,
+      initWidth: this.piskelController.getWidth() * scale,
+      initHeight: this.piskelController.getHeight() * scale,
+      onChange: this.onSizeInputChange_
     });
 
     this.onSizeInputChange_();
@@ -63,7 +90,9 @@
     var dataUriButton = document.querySelector('.datauri-open-button');
     var showGridInput = document.querySelector('input#png-show-grid');
     var hideImageInput = document.querySelector('input#png-hide-image');
-    var showCellCounterInput = document.querySelector('input#png-show-cell-counter');
+    var showCellCounterInput = document.querySelector(
+      'input#png-show-cell-counter'
+    );
 
     showGridInput.checked = this.showGrid;
     hideImageInput.checked = this.hideImage;
@@ -82,11 +111,17 @@
     this.addEventListener(dataUriButton, 'click', this.onDataUriClick_);
     this.addEventListener(showGridInput, 'change', this.onShowGridChange_);
     this.addEventListener(hideImageInput, 'change', this.onHideImageChange_);
-    this.addEventListener(showCellCounterInput, 'change', this.onShowCellCounterChange_);
+    this.addEventListener(
+      showCellCounterInput,
+      'change',
+      this.onShowCellCounterChange_
+    );
     $.subscribe(Events.EXPORT_SCALE_CHANGED, this.onScaleChanged_);
+
+    applyI18n();
   };
 
-  ns.PngExportController.prototype.onScaleChange_ = function () {
+  ns.PngExportController.prototype.onScaleChange_ = function() {
     var value = parseFloat(this.scaleInput.value);
     if (!isNaN(value)) {
       if (Math.round(this.getExportZoom()) != value) {
@@ -107,13 +142,13 @@
     );
   };
 
-  ns.PngExportController.prototype.updateScaleText_ = function (scale) {
+  ns.PngExportController.prototype.updateScaleText_ = function(scale) {
     scale = scale.toFixed(1);
     var scaleText = document.querySelector('.export-scale .scale-text');
     scaleText.innerHTML = scale + 'x';
   };
 
-  ns.PngExportController.prototype.onSizeInputChange_ = function () {
+  ns.PngExportController.prototype.onSizeInputChange_ = function() {
     var zoom = this.getExportZoom();
     if (isNaN(zoom)) {
       return;
@@ -127,7 +162,6 @@
       this.onScaleChange_();
     }
   };
-
 
   /**
    * Initalize all controls related to the spritesheet layout.

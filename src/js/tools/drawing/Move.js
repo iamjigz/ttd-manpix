@@ -8,13 +8,13 @@
 
   ns.Move = function() {
     this.toolId = ns.Move.TOOL_ID;
-    this.helpText = 'Move tool';
+    this.helpText = pskl.app.i18n('Move tool');
     this.shortcut = pskl.service.keyboard.Shortcuts.TOOL.MOVE;
 
     this.tooltipDescriptors = [
-      {key : 'ctrl', description : 'Apply to all layers'},
-      {key : 'shift', description : 'Apply to all frames'},
-      {key : 'alt', description : 'Wrap canvas borders'}
+      {key : 'ctrl', description : pskl.app.i18n('Apply to all layers')},
+      {key : 'shift', description : pskl.app.i18n('Apply to all frames')},
+      {key : 'alt', description : pskl.app.i18n('Wrap canvas borders')}
     ];
 
     // Stroke's first point coordinates (set in applyToolAt)

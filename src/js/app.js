@@ -291,6 +291,14 @@
           window.reloadStyles
         );
       }
+
+      //setTimeout(
+      //  function() {
+      //    this.canvasBackgroundColor = "#0000AA";
+      //    pskl.app.drawingController.render(true);
+      //  }.bind(this),
+      //  1500
+      //);
     },
 
     connectServer: function() {
@@ -298,6 +306,8 @@
       var api = window.Api;
       var params = api.getCustomURLParams();
       axios.defaults.withCredentials = true;
+
+      this.setI18n(this._i18n);
 
       var self = this;
 
@@ -396,6 +406,8 @@
 
     _piskelLoaded: false,
 
+    canvasBackgroundColor: null,
+
     isPiskelLoaded: function() {
       return this._piskelLoaded;
     },
@@ -424,6 +436,237 @@
             console.log('failed to load piskel: ', error);
           }
       );
+    },
+
+    _i18n: {
+      'Pen tool': 'Pansulat kagamitan',
+      'Vertical Mirror pen': 'Pabaliktad kagamitan',
+      'Use horizontal axis': 'Gamitin ang pahalang na aksis',
+      'Use horizontal and vertical axis':
+        'Gamitin ang pahalang at patayong aksis',
+      'Paint bucket tool': 'Pintang balde',
+      'Paint all pixels of the same color':
+        'Pintahan lahat ng piksel ng parehang kulay',
+
+      'Apply to all layers': 'I-apply sa lahat ng layer',
+      'Apply to all frames': 'I-apply sa lahat ng frame',
+      'Eraser tool': 'Pang-bura',
+      'Stroke tool': 'Pang-stroke',
+      'Hold shift to draw straight lines':
+        'I-hold ang shift para mag-guhit ng linya',
+      'Rectangle tool': 'Pang-parisukat',
+      'Keep 1 to 1 ratio': 'I-maintain ang 1 ratio',
+      'Circle tool': 'Pang-bilog',
+      'Move tool': 'Pang-galaw',
+      'Shape selection': 'Pang-pili ng hugis',
+      'Rectangle selection': 'Pang-pili ng rektanggulo',
+      'Lasso selection': 'Pang-pili ng lasso',
+      'Wrap canvas borders': 'I-balot sa canvas borders',
+      'Drag the selection to move it. You may switch to other layers and frames.':
+        'Hilain ang pinili para gumalaw. Pwedeng lumipat sa obang mga layer at mga frame',
+      'Copy the selected area': 'Kopyahin ang piniling area lugar',
+      'Paste the copied area': 'I-dikit ang kinopyang lugar',
+      'Hold to move the content': 'Hawakan ang ginalaw na nilalaman',
+      'Dithering tool': 'Pang-dither',
+      'Color picker': 'Pang-pili ng kulay',
+      'Flip horizontally': 'I-baliktad ng pahalang',
+      'Flip vertically': 'I-baliktad ng patayo',
+      'Clockwise rotation': 'sunod-sunod na pag-ikot',
+      'Align image to the center': 'I-sentro ang imahe',
+      'Show resize settings': 'Ipakita ang mga setting ng pangbago ng laki',
+      'Show color counter': 'Ipakita ang bilangan ng kulay',
+
+      'Vertical mirror pen tool': 'Patayong baligtad na pang-sulat',
+      'Reset zoom level': 'I-reset ang zoom level',
+      'Increase zoom level': 'Dagdagan ang zoom level',
+      'Decrease zoom level': 'Bawasan ang zoom level',
+      'Increase pen size': 'Dagdagan ang laki ng pang-sulat',
+      'Decrease pen size': 'Bawasan ang laki ng pang-sulat',
+      Undo: 'Ibalik',
+      Redo: 'Ulitin',
+
+      'Select previous frame': 'I-select ang nakaraang frame',
+      'Select next frame': 'I-select ang susunod na frame',
+      'Create new empty frame': 'Gumawa ng bagong frame',
+      'Duplicate selected frame': 'Doblehin ang nakapiling frame',
+      'Open the keyboard shortcut cheatsheet':
+        'Buksan ang keyboard shortcut cheatsheet',
+
+      'Select original size preview': 'Piliin ang orihinal na laki ng preview',
+      'Select best size preview': 'Piliin ang best na laki ng preview',
+      'Select full size preview': 'Piliin ang full na laki ng preview',
+
+      'Toggle onion skin': 'I-toggle ang onion skin',
+      'Toggle layer preview': 'I-toggle ang layer preview',
+
+      'Open merge animation popup': 'Buksan ang merge animation popup',
+      'Close an opened popup': 'Isara ang nakabukas na popup',
+      'Move viewport up': 'Ilipat ang viewport pataas',
+      'Move viewport right': 'Ilipat ang viewport sa kanan',
+      'Move viewport left': 'Ilipat ang viewport sa kaliwa',
+      'Move viewport down': 'Ilipat ang viewport sa baba',
+
+      'Cut selection': 'Alisin ang nakapili',
+      'Copy selection': 'Kopyahin ang nakapili',
+      'Paste selection': 'I-paste ang nakapili',
+      'Delete selection': 'I-delete ang nakapili',
+      'Commit selection': 'I-commit ang nakapili',
+
+      'Swap primary/secondary colors':
+        'I-swap ang primary/secondary na mga kulay',
+      'Reset default colors': 'I-reset ang mga default na kulay',
+
+      'Open the palette creation popup':
+        'I-open ang popup ng paggawa ng palette',
+
+      'Select the previous color in the current palette':
+        'Piliiin ang nakaraang kulay sa pangkasalakuyang palette,',
+
+      'Select the next color in the current palette':
+        'Piliiin ang susunod kulay sa pangkasalakuyang palette',
+
+      'Select a palette color in the current palette':
+        'Pumili ng kulay sa pangkasalukuyang palette',
+
+      '(desktop) Open a .piskel file': '(desktop) Mag-bukas ng .piskel file',
+      '(desktop) Save as new': '(desktop) Mag-save ng bago',
+
+      'Save the current sprite': 'I-save ang pangkasalukuyang sprite',
+
+      'Pen size': 'Laki ng panulat',
+      'from 1 to 4 pixels': 'Mula sa 1 hanggang 4 na piksel',
+
+      Preferences: 'Mga kagustuhan',
+
+      Resize: 'Baguhin ang laki',
+      'Resize the drawing area': 'Baguhin ang laki ng lugar ng pagguhitan',
+
+      Save: 'I-save',
+      'Save to your gallery, save locally': 'I-ligtas sa inyong galerya',
+      'or export as a file': 'o i-export bilang isang file',
+
+      Export: 'I-export',
+      'Export Image as PNG': 'I-export bilang isang PNG',
+
+      Import: 'I-import',
+      'Import an existing image': 'I-import ang dating imahe',
+
+      'Sprite Information': 'Impormasyon sa sprite',
+      Title: 'titulo',
+      Description: 'Diskripsyon',
+      Public: 'Publiko',
+
+      'Save offline in Browser': 'I-save offline sa browser',
+      'Your piskel will be saved locally and will only be accessible from this browser.':
+        'Ang inyong piskel ay masasaved locally',
+
+      'Save as File': 'I-save bilang isang file',
+      'Your sprite will be saved as a .piskel file.':
+        'Ang inyong sprite ay masasaved bilang isang .piskel file',
+
+      'Save offline as File': 'I-save offline bilang isang file',
+      'Your sprite will be downloaded as a .piskel file.':
+        'Ang inyong sprite ay madodownload bilang isang .piskel file',
+
+      'Save online': 'I-save online',
+      'Your piskel will be stored online in your gallery.':
+        'Ang inyong piskel ay ma-sasave sa online galerya',
+
+      'Export your animation as a |TYPE| image.':
+        'I-export ang inyong animation bilang isang |TYPE| image',
+
+      Scale: 'Antas',
+      'Include grid in image': 'I-sama ang grid sa imahe',
+      'Note: You must configure the grid first in the preferences':
+        'N.B. Kailangan mong i-configure ang grid muna sa mga preferences',
+      'Show cell counter': 'I-pakita ang cell counter',
+      'Hide image with numbers': 'I-tago ang imahe gamit ang mga numbers',
+
+      Download: 'I-download',
+      'Download as a PNG file': 'I-download bilang isang PNG file',
+
+      'LOAD FROM BROWSER': 'I-load mula sa browser',
+      'LOAD .PISKEL FILE': 'I-load ang .piskel file',
+      'IMPORT FROM PICTURE': 'Mag-import mula sa picture',
+
+      'Browse local saves': 'I-browse mula sa mga local na save',
+      'Browse .piskel files': 'I-browse ang mga .piskel files',
+      'Browse images': 'I-browse ang mga imahe',
+
+      'Load a local piskel saved in this Browser':
+        'Mag-load ng local na piskel sa browser na ito',
+      'Load a .piskel file from your computer':
+        'Mag-load ng .piskel mula sa inyong kompyuter',
+      'Supports PNG, JPG, BMP': 'Pwede ang PNG, JPG, BMP',
+
+      'RECOVER RECENT SESSIONS': 'I-recover ang nakaraang sessions',
+      'Browse backups of previous sessions.':
+        'I-browse ang mga backup ng nakaraang sessions',
+      'Browse backups': 'I-browse ang backups',
+
+      Background: 'Likud-lupa',
+      'Enable grid': 'Ipakita ang grid',
+      'Grid size': 'Laki o lapad ng grid',
+      'Grid spacing': 'Spasyo ng grid',
+      'Grid color': 'Kulay ng grid',
+
+      'COLOR COUNTER': 'Bilangan ng kulay',
+      'Empty canvas': 'Blankong kanvas'
+    },
+
+    setI18n(i18n) {
+      if (!i18n) {
+        return;
+      }
+      if (typeof i18n == 'function') {
+        this._i18nFn = i18n;
+      } else {
+        this._i18nFn = null;
+        for (var k in Object.keys(i18n)) {
+          this._i18n[k] = i18n[k];
+        }
+      }
+
+      document.querySelector(
+        '.pen-size-container.size-picker-container'
+      ).title =
+        this.i18n('Pen size') + '<br>' + this.i18n('from 1 to 4 pixels');
+
+      document.querySelector('.tool-icon.icon-settings-gear-white').title =
+        '<span class=\'highlight\'>' +
+        pskl.app.i18n('Preferences') +
+        '</span></br>';
+      document.querySelector('.tool-icon.icon-settings-resize-white').title =
+        '<span class=\'highlight\'>' +
+        pskl.app.i18n('Resize') +
+        '</span></br>' +
+        pskl.app.i18n('Resize the drawing area');
+      document.querySelector('.tool-icon.icon-settings-save-white').title =
+        '<span class=\'highlight\'>' +
+        pskl.app.i18n('Save') +
+        '</span></br>' +
+        pskl.app.i18n('Save to your gallery, save locally') +
+        '<br/>' +
+        pskl.app.i18n('or export as a file');
+      document.querySelector('.tool-icon.icon-settings-export-white').title =
+        '<span class=\'highlight\'>' +
+        pskl.app.i18n('Export') +
+        '</span></br>' +
+        pskl.app.i18n('Export Image as PNG');
+      document.querySelector(
+        '.tool-icon.icon-settings-open-folder-white'
+      ).title =
+        '<span class=\'highlight\'>' +
+        pskl.app.i18n('Import') +
+        '</span></br>' +
+        pskl.app.i18n('Import an existing image');
+    },
+
+    i18n(text) {
+      if (this._i18nFn) {
+        return this._i18nFn(text) || text;
+      }
+      return this._i18n[text] || text;
     },
 
     getPiskelInitData_: function() {

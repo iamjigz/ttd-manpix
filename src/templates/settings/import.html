@@ -1,21 +1,19 @@
 <script type="text/template" id="templates/settings/import.html">
   <div class="settings-section settings-section-import">
-    <div class="settings-title">
+    <div class="browse-local settings-title">
       Load from Browser
     </div>
-    <div class="settings-item">
-      <span>Load a
-        <span class="import-highlight">local piskel</span> saved in this Browser</span>
+    <div class="browse-local settings-item">
+      <span class="info-text">Load a local piskel saved in this Browser</span>
       <div class="import-section">
         <button type="button" class="button  button-primary browse-local-button">Browse local saves</button>
       </div>
     </div>
-    <div class="settings-title">
+    <div class="open-piskel settings-title">
       Load .piskel file
     </div>
-    <div class="settings-item">
-      <span>Load a
-        <span class="import-highlight">.piskel</span> file from your computer</span>
+    <div class="open-piskel settings-item">
+      <span class="info-text">Load a .piskel file from your computer</span>
       <div class="import-section">
         <button type="button" class="button  button-primary open-piskel-button">Browse .piskel files</button>
         <span class="file-input-open-piskel-status"></span>
@@ -23,24 +21,22 @@
         />
       </div>
     </div>
-    <div class="settings-title">
+    <div class="import-pic settings-title">
       Import From Picture
     </div>
-    <div class="settings-item">
-      <div style="margin-top:5px;margin-bottom:5px;">Supports
-        <span class="import-highlight">PNG, JPG, BMP</span>
-      </div>
+    <div class="import-pic settings-item">
+      <div class="info-text" style="margin-top:5px;margin-bottom:5px;">Supports PNG, JPG, BMP</div>
       <div class="import-section">
         <button type="button" class="button  button-primary file-input-button">Browse images</button>
         <input style="display:none" type="file" name="file-upload-input" value="file" accept="image/*"
         />
       </div>
     </div>
-    <div class="settings-title">
+    <div class="recover settings-title">
       Recover recent sessions
     </div>
-    <div class="settings-item">
-      Browse backups of previous sessions.
+    <div class="recover settings-item">
+      <span class="info-text">Browse backups of previous sessions.</span>
       <div style="margin-top:10px;">
         <button type="button" class="button button-primary browse-backups-button">Browse backups</button>
       </div>

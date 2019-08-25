@@ -10,15 +10,14 @@
     ns.AbstractDragSelect.call(this);
 
     this.toolId = 'tool-rectangle-select';
-    this.helpText = 'Rectangle selection';
+    this.helpText = pskl.app.i18n('Rectangle selection');
     this.shortcut = pskl.service.keyboard.Shortcuts.TOOL.RECTANGLE_SELECT;
-
   };
 
   pskl.utils.inherit(ns.RectangleSelect, ns.AbstractDragSelect);
 
   /** @override */
-  ns.RectangleSelect.prototype.onDragSelectStart_ = function (col, row) {
+  ns.RectangleSelect.prototype.onDragSelectStart_ = function(col, row) {
     $.publish(Events.DRAG_START, [col, row]);
   };
 
@@ -28,17 +27,31 @@
    * the current mouse coordiinate in sprite.
    * @override
    */
-  ns.RectangleSelect.prototype.onDragSelect_ = function (col, row, frame, overlay) {
+  ns.RectangleSelect.prototype.onDragSelect_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {
     overlay.clear();
-    this.selection = new pskl.selection.RectangularSelection(this.startCol, this.startRow, col, row);
+    this.selection = new pskl.selection.RectangularSelection(
+      this.startCol,
+      this.startRow,
+      col,
+      row
+    );
     $.publish(Events.SELECTION_CREATED, [this.selection]);
     this.drawSelectionOnOverlay_(overlay);
   };
 
   /** @override */
-  ns.RectangleSelect.prototype.onDragSelectEnd_ = function (col, row, frame, overlay) {
+  ns.RectangleSelect.prototype.onDragSelectEnd_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {
     this.onSelect_(col, row, frame, overlay);
     $.publish(Events.DRAG_END);
   };
-
 })();

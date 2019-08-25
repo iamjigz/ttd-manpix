@@ -21,10 +21,10 @@
     this.hasSelection = false;
 
     this.tooltipDescriptors = [
-      {description : 'Drag the selection to move it. You may switch to other layers and frames.'},
-      {key : 'ctrl+c', description : 'Copy the selected area'},
-      {key : 'ctrl+v', description : 'Paste the copied area'},
-      {key : 'shift', description : 'Hold to move the content'}
+      {description : pskl.app.i18n('Drag the selection to move it. You may switch to other layers and frames.')},
+      {key : 'ctrl+c', description : pskl.app.i18n('Copy the selected area')},
+      {key : 'ctrl+v', description : pskl.app.i18n('Paste the copied area')},
+      {key : 'shift', description : pskl.app.i18n('Hold to move the content')}
     ];
 
     $.subscribe(Events.SELECTION_DISMISSED, this.onSelectionDismissed_.bind(this));
