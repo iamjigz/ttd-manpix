@@ -165,7 +165,7 @@
 
     STORAGE: {
       SAVE: createShortcut('save', 'Save the current sprite', 'ctrl+S'),
-      OPEN: createShortcut('open', '(desktop) Open a .piskel file', 'ctrl+O'),
+      OPEN: createShortcut('open', '(desktop) Open a ﹒piskel file', 'ctrl+O'),
       SAVE_AS: createShortcut(
         'save-as',
         '(desktop) Save as new',
@@ -174,7 +174,11 @@
     },
 
     COLOR: {
-      SWAP: createShortcut('swap-colors', 'Swap primary/secondary colors', 'X'),
+      SWAP: createShortcut(
+        'swap-colors',
+        'Swap primary or secondary colors',
+        'X'
+      ),
       RESET: createShortcut('reset-colors', 'Reset default colors', 'D'),
       CREATE_PALETTE: createShortcut(
         'create-palette',

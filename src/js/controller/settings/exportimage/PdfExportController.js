@@ -32,6 +32,7 @@
     pskl.utils.applyI18nDOM(
       '.export-panel-section.export-panel-row .pdf-export-datauri-info.export-info'
     );
+    pskl.utils.applyI18nDOM('.pdf-export-datauri-info export-info');
   }
 
   ns.PdfExportController = function(piskelController, exportController) {

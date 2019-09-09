@@ -1,5 +1,5 @@
 (function() {
-  var ns = $.namespace("pskl.rendering.frame");
+  var ns = $.namespace('pskl.rendering.frame');
 
   /**
    * FrameRenderer will display a given frame inside a canvas element.
@@ -21,11 +21,11 @@
     );
 
     if (container === undefined) {
-      throw "Bad FrameRenderer initialization. <container> undefined.";
+      throw 'Bad FrameRenderer initialization. <container> undefined.';
     }
 
     if (isNaN(renderingOptions.zoom)) {
-      throw "Bad FrameRenderer initialization. <zoom> not well defined.";
+      throw 'Bad FrameRenderer initialization. <zoom> not well defined.';
     }
 
     this.container = container;
@@ -45,7 +45,7 @@
     this.supportGridRendering = renderingOptions.supportGridRendering;
 
     this.classList = classList || [];
-    this.classList.push("canvas");
+    this.classList.push('canvas');
 
     /**
      * Off dom canvas, will be used to draw the frame at 1:1 ratio
@@ -316,7 +316,7 @@
 
     this.updateMargins_(frame);
 
-    var displayContext = this.displayCanvas.getContext("2d");
+    var displayContext = this.displayCanvas.getContext('2d');
     displayContext.save();
 
     var translateX = this.margin.x - this.offset.x * z;
@@ -347,13 +347,13 @@
     // Scale up to draw the canvas content
     displayContext.scale(z, z);
 
-    if (pskl.UserSettings.get("SEAMLESS_MODE")) {
+    if (pskl.UserSettings.get('SEAMLESS_MODE')) {
       displayContext.clearRect(-1 * w, -1 * h, 3 * w, 3 * h);
     } else {
       displayContext.clearRect(0, 0, w, h);
     }
 
-    if (pskl.UserSettings.get("SEAMLESS_MODE")) {
+    if (pskl.UserSettings.get('SEAMLESS_MODE')) {
       this.drawTiledFrames_(displayContext, this.canvas, w, h, 1);
     }
     displayContext.drawImage(this.canvas, 0, 0);
@@ -404,9 +404,9 @@
     h,
     z
   ) {
-    var opacity = pskl.UserSettings.get("SEAMLESS_OPACITY");
+    var opacity = pskl.UserSettings.get('SEAMLESS_OPACITY');
     opacity = pskl.utils.Math.minmax(opacity, 0, 1);
-    context.fillStyle = "rgba(255, 255, 255, " + opacity + ")";
+    context.fillStyle = 'rgba(255, 255, 255, ' + opacity + ')';
     [
       [0, -1],
       [0, 1],

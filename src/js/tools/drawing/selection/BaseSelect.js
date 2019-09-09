@@ -21,13 +21,20 @@
     this.hasSelection = false;
 
     this.tooltipDescriptors = [
-      {description : pskl.app.i18n('Drag the selection to move it. You may switch to other layers and frames.')},
-      {key : 'ctrl+c', description : pskl.app.i18n('Copy the selected area')},
-      {key : 'ctrl+v', description : pskl.app.i18n('Paste the copied area')},
-      {key : 'shift', description : pskl.app.i18n('Hold to move the content')}
+      {
+        description: pskl.app.i18n(
+          'Drag the selection to move it﹒ You may switch to other layers and frames﹒'
+        )
+      },
+      { key: 'ctrl+c', description: pskl.app.i18n('Copy the selected area') },
+      { key: 'ctrl+v', description: pskl.app.i18n('Paste the copied area') },
+      { key: 'shift', description: pskl.app.i18n('Hold to move the content') }
     ];
 
-    $.subscribe(Events.SELECTION_DISMISSED, this.onSelectionDismissed_.bind(this));
+    $.subscribe(
+      Events.SELECTION_DISMISSED,
+      this.onSelectionDismissed_.bind(this)
+    );
   };
 
   pskl.utils.inherit(ns.BaseSelect, pskl.tools.drawing.BaseTool);
@@ -35,7 +42,13 @@
   /**
    * @override
    */
-  ns.BaseSelect.prototype.applyToolAt = function(col, row, frame, overlay, event) {
+  ns.BaseSelect.prototype.applyToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     this.startCol = col;
     this.startRow = row;
 
@@ -64,7 +77,13 @@
   /**
    * @override
    */
-  ns.BaseSelect.prototype.moveToolAt = function(col, row, frame, overlay, event) {
+  ns.BaseSelect.prototype.moveToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     if (this.mode == 'select') {
       this.onSelect_(col, row, frame, overlay);
     } else if (this.mode == 'moveSelection') {
@@ -75,7 +94,13 @@
   /**
    * @override
    */
-  ns.BaseSelect.prototype.releaseToolAt = function(col, row, frame, overlay, event) {
+  ns.BaseSelect.prototype.releaseToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     if (this.mode == 'select') {
       this.onSelectEnd_(col, row, frame, overlay);
     } else if (this.mode == 'moveSelection') {
@@ -88,7 +113,13 @@
    * instead of the 'select' one. It indicates that we can move the selection by dragndroping it.
    * @override
    */
-  ns.BaseSelect.prototype.moveUnactiveToolAt = function(col, row, frame, overlay, event) {
+  ns.BaseSelect.prototype.moveUnactiveToolAt = function(
+    col,
+    row,
+    frame,
+    overlay,
+    event
+  ) {
     if (overlay.containsPixel(col, row)) {
       if (this.isInSelection(col, row)) {
         // We're hovering the selection, show the move tool:
@@ -102,21 +133,27 @@
     }
 
     if (!this.hasSelection) {
-      pskl.tools.drawing.BaseTool.prototype.moveUnactiveToolAt.apply(this, arguments);
+      pskl.tools.drawing.BaseTool.prototype.moveUnactiveToolAt.apply(
+        this,
+        arguments
+      );
     }
   };
 
-  ns.BaseSelect.prototype.isInSelection = function (col, row) {
-    return this.selection && this.selection.pixels.some(function (pixel) {
-      return pixel.col === col && pixel.row === row;
-    });
+  ns.BaseSelect.prototype.isInSelection = function(col, row) {
+    return (
+      this.selection &&
+      this.selection.pixels.some(function(pixel) {
+        return pixel.col === col && pixel.row === row;
+      })
+    );
   };
 
   /**
    * Protected method, should be called when the selection is committed,
    * typically by clicking outside of the selected area.
    */
-  ns.BaseSelect.prototype.commitSelection = function () {
+  ns.BaseSelect.prototype.commitSelection = function() {
     if (this.isMovingContent_) {
       $.publish(Events.CLIPBOARD_PASTE);
       this.isMovingContent_ = false;
@@ -129,7 +166,7 @@
   /**
    * Protected method, should be called when the selection is dismissed.
    */
-  ns.BaseSelect.prototype.onSelectionDismissed_ = function () {
+  ns.BaseSelect.prototype.onSelectionDismissed_ = function() {
     var overlay = pskl.app.drawingController.overlayFrame;
     overlay.clear();
     this.hasSelection = false;
@@ -139,39 +176,59 @@
    * For each pixel in the selection draw it in white transparent on the tool overlay
    * @protected
    */
-  ns.BaseSelect.prototype.drawSelectionOnOverlay_ = function (overlay) {
+  ns.BaseSelect.prototype.drawSelectionOnOverlay_ = function(overlay) {
     var pixels = this.selection.pixels;
-    for (var i = 0, l = pixels.length; i < l ; i++) {
+    for (var i = 0, l = pixels.length; i < l; i++) {
       var pixel = pixels[i];
-      var hasColor = pixel.color && pixel.color !== Constants.TRANSPARENT_COLOR ;
-      var color = hasColor ? this.getTransparentVariant_(pixel.color) : Constants.SELECTION_TRANSPARENT_COLOR;
+      var hasColor = pixel.color && pixel.color !== Constants.TRANSPARENT_COLOR;
+      var color = hasColor ?
+        this.getTransparentVariant_(pixel.color) :
+        Constants.SELECTION_TRANSPARENT_COLOR;
 
       overlay.setPixel(pixels[i].col, pixels[i].row, color);
     }
   };
 
-  ns.BaseSelect.prototype.getTransparentVariant_ = pskl.utils.FunctionUtils.memo(function (colorStr) {
-    var color = window.tinycolor(colorStr);
-    color = window.tinycolor.lighten(color, 10);
-    color.setAlpha(0.5);
-    return color.toRgbString();
-  }, {});
+  ns.BaseSelect.prototype.getTransparentVariant_ = pskl.utils.FunctionUtils.memo(
+    function(colorStr) {
+      var color = window.tinycolor(colorStr);
+      color = window.tinycolor.lighten(color, 10);
+      color.setAlpha(0.5);
+      return color.toRgbString();
+    },
+    {}
+  );
 
   // The list of callbacks to implement by specialized tools to implement the selection creation behavior.
   /** @protected */
-  ns.BaseSelect.prototype.onSelectStart_ = function (col, row, frame, overlay) {};
+  ns.BaseSelect.prototype.onSelectStart_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {};
   /** @protected */
-  ns.BaseSelect.prototype.onSelect_ = function (col, row, frame, overlay) {};
+  ns.BaseSelect.prototype.onSelect_ = function(col, row, frame, overlay) {};
   /** @protected */
-  ns.BaseSelect.prototype.onSelectEnd_ = function (col, row, frame, overlay) {};
+  ns.BaseSelect.prototype.onSelectEnd_ = function(col, row, frame, overlay) {};
 
   // The list of callbacks that define the drag'n drop behavior of the selection.
   /** @private */
 
-  ns.BaseSelect.prototype.onSelectionMoveStart_ = function (col, row, frame, overlay) {};
+  ns.BaseSelect.prototype.onSelectionMoveStart_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {};
 
   /** @private */
-  ns.BaseSelect.prototype.onSelectionMove_ = function (col, row, frame, overlay) {
+  ns.BaseSelect.prototype.onSelectionMove_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {
     var deltaCol = col - this.lastMoveCol;
     var deltaRow = row - this.lastMoveRow;
 
@@ -188,7 +245,12 @@
   };
 
   /** @private */
-  ns.BaseSelect.prototype.onSelectionMoveEnd_ = function (col, row, frame, overlay) {
+  ns.BaseSelect.prototype.onSelectionMoveEnd_ = function(
+    col,
+    row,
+    frame,
+    overlay
+  ) {
     this.onSelectionMove_(col, row, frame, overlay);
   };
 })();

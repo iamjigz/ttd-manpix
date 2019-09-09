@@ -10,66 +10,26 @@
   };
 
   function applyI18n() {
-    document.querySelector(
-      '.save-form .settings-title'
-    ).textContent = pskl.app.i18n('Sprite Information');
-    document.querySelector(
-      '.save-form .settings-form-section-title > label'
-    ).textContent = pskl.app.i18n('Title') + ' : ';
-    document.querySelector(
-      '.save-form .settings-form-section-desc > label'
-    ).textContent = pskl.app.i18n('Description') + ' : ';
-    document.querySelector(
-      '.save-form .save-public-section > label > span'
-    ).textContent = pskl.app.i18n('Public') + ' : ';
+    pskl.utils.applyI18nDOM('.settings-title.sprite-info');
+    pskl.utils.applyI18nDOM('.settings-form-section .title-label');
+    pskl.utils.applyI18nDOM('.settings-form-section .desc-label');
+    pskl.utils.applyI18nDOM('.settings-form-section .public-label');
+    pskl.utils.applyI18nDOM('.save-online-label');
+    pskl.utils.applyI18nDOM('.save-online-status');
+    pskl.utils.applyI18nDOM('.save-status-warning-text');
+    pskl.utils.applyI18nDOM('.save-localstorage.settings-title');
+    pskl.utils.applyI18nDOM('.save-localstorage.save-status');
+    pskl.utils.applyI18nDOM('.save-desktop.settings-title');
+    pskl.utils.applyI18nDOM('.save-desktop.save-status');
+    pskl.utils.applyI18nDOM('.save-file.settings-title');
+    pskl.utils.applyI18nDOM('.save-file.save-status');
 
-    document.querySelector(
-      '.save-localstorage.settings-title'
-    ).textContent = pskl.app.i18n('Save offline in Browser');
-    document.querySelector(
-      '.save-localstorage.save-status'
-    ).textContent = pskl.app.i18n(
-      'Your piskel will be saved locally and will only be accessible from this browser.'
-    );
-
-    try {
-      document.querySelector(
-        '.save-file.settings-title'
-      ).textContent = pskl.app.i18n('Save offline as File');
-      document.querySelector(
-        '.save-file.save-status'
-      ).textContent = pskl.app.i18n(
-        'Your sprite will be downloaded as a .piskel file.'
-      );
-    } catch (e) {
-      console.log(e);
-    }
-
-    try {
-      document.querySelector(
-        '.save-online.settings-title'
-      ).textContent = pskl.app.i18n('Save online');
-      document.querySelector(
-        '.save-online.save-status'
-      ).textContent = pskl.app.i18n(
-        'Your piskel will be stored online in your gallery.'
-      );
-    } catch (e) {
-      console.log(e);
-    }
-
-    try {
-      document.querySelector(
-        '.save-desktop.settings-title'
-      ).textContent = pskl.app.i18n('Save as File');
-      document.querySelector(
-        '.save-desktop.save-status'
-      ).textContent = pskl.app.i18n(
-        'Your sprite will be saved as a .piskel file.'
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    [
+      document.querySelector('#save-file-download-button'),
+      document.querySelector('#save-localstorage-button')
+    ].forEach(function(button) {
+      button.value = pskl.app.i18n(button.value);
+    });
   }
 
   ns.SaveController = function(piskelController) {
