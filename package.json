@@ -44,7 +44,7 @@
     "grunt-jscs": "2.8.0",
     "grunt-karma": "1.0.0",
     "grunt-leading-indent": "0.2.0",
-    "grunt-nw-builder": "3.1.0",
+    "grunt-nw-builder": "3.8.2",
     "grunt-prettier": "^1.1.1",
     "grunt-prettify": "^0.4.0",
     "grunt-replace": "1.0.1",
